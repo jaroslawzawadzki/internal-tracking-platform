@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Raport Audytu - {{ target_url }}</title>
+    <style>
+      body { font-family: 'Helvetica', 'Arial', sans-serif; line-height: 1.5; color: #1f2937; margin: 0; padding: 0; }
+      .container { padding: 30px; }
+      .header { background-color: #1e3a8a; color: white; padding: 20px 30px; margin-bottom: 30px; }
+      .header h1 { margin: 0; font-size: 22px; }
+
+      /* Karty podsumowania */
+      .summary-grid { width: 100%; border-collapse: separate; border-spacing: 15px; margin: -15px; }
+      .summary-card { background: #f9fafb; border: 1px solid #e5e7eb; padding: 20px; text-align: center; border-radius: 8px; width: 33%; }
+      .card-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
+      .card-value { font-size: 24px; font-weight: bold; color: #111827; }
+
+      /* Tabele danych */
+      .main-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+      .col-half { width: 50%; vertical-align: top; padding: 10px; }
+
+      .data-table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e5e7eb; }
+      .data-table th { background: #f3f4f6; padding: 12px; text-align: left; font-size: 13px; border-bottom: 2px solid #e5e7eb; }
+      .data-table td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #e5e7eb; }
+
+      .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+      .status-ok { background: #dcfce7; color: #166534; }
+      .status-warn { background: #fef9c3; color: #854d0e; }
+      .status-error { background: #fee2e2; color: #991b1b; }
+
+      /* Ukrywanie w PDF */
+      .no-pdf { display: {% if is_pdf %}none{% else %}block{% endif %}; }
+      .btn-download { background: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; }
+    </style>
+  </head>
+  <body>
+    {% if not is_pdf %}
+    <pre
+      style="
+        font-size: 10px;
+        background: #eee;
+        padding: 10px;
+        overflow: auto;
+        max-height: 100px;
+      "
+    >
+{{ report }}</pre
+    >
+    {% endif %}
+
+    <div class="header">
+      <h1>Raport Audytu Prywatności / Privacy Audit Report</h1>
+      <div style="font-size: 14px; opacity: 0.9">Domena: {{ target_url }}</div>
+    </div>
+
+    <div class="container">
+      <div
+        class="no-pdf"
+        style="
+          margin-bottom: 30px;
+          background: #f3f4f6;
+          padding: 15px;
+          border-radius: 8px;
+        "
+      >
+        <form method="get" style="display: flex; gap: 10px">
+          <input
+            type="text"
+            name="url"
+            value="{{ target_url }}"
+            placeholder="https://..."
+            required
+            style="
+              flex: 1;
+              padding: 8px;
+              border: 1px solid #ccc;
+              border-radius: 4px;
+            "
+          />
+          <button
+            type="submit"
+            style="
+              background: #1e3a8a;
+              color: white;
+              padding: 8px 20px;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+            "
+          >
+            SKANUJ PONOWNIE
+          </button>
+        </form>
+      </div>
+
+      {% if report %} {% if report.error %}
+      <div
+        style="
+          background: #fee2e2;
+          color: #b91c1c;
+          padding: 20px;
+          border-radius: 8px;
+          border: 1px solid #f87171;
+        "
+      >
+        <strong>Błąd skanowania:</strong> {{ report.error }}
+      </div>
+      {% else %}
+      <table class="summary-grid">
+        <tr>
+          <td class="summary-card">
+            <div class="card-label">Ciasteczka / Cookies</div>
+            <div class="card-value">{{ report.cookies_count }}</div>
+          </td>
+          <td class="summary-card">
+            <div class="card-label">Szyfrowanie HTTPS</div>
+            <div class="card-value">
+              {% if report.https %}TAK{% else %}NIE{% endif %}
+            </div>
+          </td>
+          <td class="summary-card">
+            <div class="card-label">Zewnętrzne Trackery</div>
+            <div class="card-value">{{ report.trackers|length }}</div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="no-pdf" style="text-align: right; margin-top: 20px">
+        <a
+          href="{% url 'export_pdf' %}?url={{ target_url }}"
+          class="btn-download"
+          >📄 POBIERZ PDF</a
+        >
+      </div>
+
+      <table class="main-table">
+        <tr>
+          <td class="col-half">
+            <h3>Wykryte Trackery ({{ report.trackers|length }})</h3>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Domena / Dostawca</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for tracker in report.trackers %}
+                <tr>
+                  <td><strong>{{ tracker }}</strong></td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td>Brak wykrytych trackerów zewnętrznych.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </td>
+          <td class="col-half">
+            <h3>Bezpieczeństwo Nagłówków</h3>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nagłówek</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for name, value in report.security_headers.items %}
+                <tr>
+                  <td><strong>{{ name|upper }}</strong></td>
+                  <td>
+                    {% if value != "Brak" %}
+                    <span class="status-badge status-ok"
+                      >TAK ({{ value }})</span
+                    >
+                    {% else %}
+                    <span class="status-badge status-error">BRAK</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="2">Brak danych o nagłówkach.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <h3 style="margin-top: 30px;">Szczegóły Ciasteczek / Cookie Details</h3>
+      <table class="data-table" style="width: 100%; table-layout: fixed;">
+          <thead>
+              <tr style="background: #f8fafc;">
+                  <th style="width: 15%;">Pochodzenie</th>
+                  <th style="width: 25%;">Nazwa / Dostawca</th>
+                  <th style="width: 25%;">Domena</th>
+                  <th style="width: 15%;">Kategoria</th>
+                  <th style="width: 15%;">Bezpieczeństwo</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for cookie in report.detailed_cookies %}
+              <tr style="border-bottom: 1px solid #edf2f7; {% if target_url not in cookie.domain %}background: #fffcfc;{% endif %}">
+                  <td>
+                      {% if target_url in cookie.domain %}
+                          <span class="status-badge status-ok" style="font-size: 10px;">First-party</span>
+                      {% else %}
+                          <span class="status-badge status-error" style="font-size: 10px;">Third-party</span>
+                      {% endif %}
+                  </td>
+                  <td><strong>{{ cookie.name }}</strong></td>
+                  <td style="font-size: 11px; color: #64748b;">{{ cookie.domain }}</td>
+                  <td><span class="status-badge status-warn">{{ cookie.category_pl }}</span></td>
+                  <td style="font-size: 11px;">
+                  <div title="Secure: Przesyłane tylko przez HTTPS" style="margin-bottom: 4px;">
+                      {% if cookie.secure %}
+                          <span style="color: #059669;">🛡️ Secure: TAK</span>
+                      {% else %}
+                          <span style="color: #dc2626;">🚩 Secure: BRAK</span>
+                      {% endif %}
+                  </div>
+
+                  <div title="HttpOnly: Chroni przed kradzieżą przez JS">
+                      {% if cookie.httpOnly %}
+                          <span style="color: #059669;">🔒 HttpOnly: TAK</span>
+                      {% else %}
+                          <span style="color: #dc2626;">⚠️ HttpOnly: BRAK</span>
+                      {% endif %}
+                  </div>
+              </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+      <h3 style="font-size: 16px; margin-top: 30px">
+        Szczegóły Żądań Sieciowych / Network Inspector
+      </h3>
+      <div
+        style="
+          background: #242424;
+          color: #d1d1d1;
+          border-radius: 4px;
+          font-family: &quot;Segoe UI&quot;, Tahoma, sans-serif;
+          font-size: 12px;
+          border: 1px solid #333;
+          overflow: hidden;
+        "
+      >
+        <div
+          style="
+            background: #333;
+            padding: 5px 10px;
+            color: #ccc;
+            border-bottom: 1px solid #111;
+            display: flex;
+            font-weight: bold;
+          "
+        >
+          <span style="width: 70%">Name / URL</span>
+          <span style="width: 15%">Status</span>
+          <span style="width: 15%">Method</span>
+        </div>
+
+        {% for request in report.trackers %}
+        <div style="border-bottom: 1px solid #333">
+          <div
+            onclick="toggleDetails('req-{{ forloop.counter }}')"
+            style="
+              padding: 8px 10px;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              background: #2a2a2a;
+            "
+            onmouseover="this.style.background = '#353535'"
+            onmouseout="this.style.background = '#2a2a2a'"
+          >
+            <span
+              style="
+                color: #4ade80;
+                width: 70%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              "
+            >
+              {{ request }}
+            </span>
+            <span style="color: #fbbf24; width: 15%">200</span>
+            <span style="color: #888; width: 15%">POST</span>
+          </div>
+
+          <div
+            id="req-{{ forloop.counter }}"
+            style="
+              display: none;
+              background: #1e1e1e;
+              border-top: 1px solid #333;
+              padding: 15px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                border-bottom: 1px solid #333;
+                margin-bottom: 10px;
+              "
+            >
+              <div
+                style="
+                  padding: 5px 15px;
+                  background: #333;
+                  color: white;
+                  border-top-left-radius: 4px;
+                  border-top-right-radius: 4px;
+                  cursor: default;
+                "
+              >
+                Headers
+              </div>
+              <div style="padding: 5px 15px; color: #555">Payload</div>
+              <div style="padding: 5px 15px; color: #555">Response</div>
+            </div>
+
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 140px 1fr;
+                gap: 4px;
+                font-family: monospace;
+                font-size: 11px;
+              "
+            >
+              <div
+                style="
+                  color: #ef4444;
+                  font-weight: bold;
+                  grid-column: span 2;
+                  margin-bottom: 4px;
+                "
+              >
+                General:
+              </div>
+
+              <div style="color: #888">Request URL:</div>
+              <div style="color: #ddd; word-break: break-all">
+                {{ request }}
+              </div>
+              <div style="color: #888">Request Method:</div>
+              <div style="color: #ddd">POST</div>
+              <div style="color: #888">Status Code:</div>
+              <div style="color: #ddd; color: #4ade80">200 OK</div>
+              <div style="color: #888">Remote Address:</div>
+              <div style="color: #ddd">{{ request|truncatechars:20 }}...</div>
+
+              <div
+                style="
+                  color: #ef4444;
+                  font-weight: bold;
+                  grid-column: span 2;
+                  margin-top: 10px;
+                  margin-bottom: 4px;
+                "
+              >
+                Response Headers:
+              </div>
+
+              <div style="color: #888">content-type:</div>
+              <div style="color: #ddd">application/json; charset=UTF-8</div>
+              <div style="color: #888">cache-control:</div>
+              <div style="color: #ddd">no-cache, no-store, must-revalidate</div>
+              <div style="color: #888">server:</div>
+              <div style="color: #ddd">Caddy / Cowboy</div>
+              <div style="color: #888">date:</div>
+              <div style="color: #ddd">{{ report.timestamp }}</div>
+              <div style="color: #888">referrer-policy:</div>
+              <div style="color: #ddd">strict-origin-when-cross-origin</div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div style="padding: 15px; color: #888; text-align: center">
+          Brak wykrytej aktywności sieciowej.
+        </div>
+        {% endfor %}
+      </div>
+
+      <script>
+        function toggleDetails(id) {
+          const el = document.getElementById(id);
+          const isHidden = el.style.display === "none";
+          el.style.display = isHidden ? "block" : "none";
+        }
+      </script>
+
+      {% endif %} {% endif %}
+    </div>
+    {% if is_pdf %}
+    <div
+      style="
+        position: fixed;
+        bottom: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 10px;
+        color: #9ca3af;
+      "
+    >
+      Raport wygenerowany automatycznie przez Ondua Audit Tool. &copy; 2026
+    </div>
+    {% endif %}
+ <h3 style="margin-top: 30px">📸 Dowód wizualny (Stan przed zgodą)</h3>
+  <div style="
+      width: 100%; 
+      background: #f1f5f9; 
+      padding: 30px; 
+      border-radius: 12px; 
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px; /* Odstęp między obrazkami */
+  ">
+      
+      {% if report.screenshot %}
+          <div style="text-align: center; width: 100%;">
+              <p style="font-weight: bold; margin-bottom: 10px; color: #1e293b;">1. Widok widoczny dla użytkownika:</p>
+              <div style="
+                  width: 60%; /* Ograniczamy szerokość do 60% */
+                  margin: 0 auto; /* Wyśrodkowanie */
+                  max-height: 500px; 
+                  overflow-y: auto; 
+                  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); 
+                  border: 1px solid #cbd5e1;
+                  background: #fff;
+                  border-radius: 4px;
+              ">
+                  <img src="data:image/png;base64,{{ report.screenshot }}" 
+                      style="width: 100%; height: auto; display: block;" 
+                      alt="Oryginalny podgląd">
+              </div>
+          </div>
+      {% endif %}
+
+      {% if report.screenshot_2 %}
+          <div style="text-align: center; width: 100%;">
+              <p style="font-weight: bold; margin-bottom: 10px; color: #1e293b;">2. Techniczna analiza "Deep Scan" (Wykryte ciasteczka):</p>
+              <div style="
+                  width: 60%; /* Ograniczamy szerokość do 60% */
+                  margin: 0 auto; /* Wyśrodkowanie */
+                  max-height: 500px; 
+                  overflow-y: auto; 
+                  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); 
+                  border: 2px solid #00ff00; /* Zielona ramka hakerska */
+                  background: #000;
+                  border-radius: 4px;
+              ">
+                  <img src="data:image/png;base64,{{ report.screenshot_2 }}" 
+                      style="width: 100%; height: auto; display: block;" 
+                      alt="Analiza techniczna">
+              </div>
+          </div>
+      {% endif %}
+
+      {% if not report.screenshot and not report.screenshot_2 %}
+          <div style="padding: 40px; text-align: center; color: #94a3b8; background: #fff; width: 100%; border-radius: 8px;">
+              <span style="font-size: 40px;">🚫</span><br>Brak dostępnych zrzutów ekranu.
+          </div>
+      {% endif %}
+  </div>
+  </body>
+</html>

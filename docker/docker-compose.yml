@@ -5,3 +5,26 @@ services:
       - "8080:80"
     volumes:
       - ../frontend:/usr/share/nginx/html:ro
+
+  backend:
+    build: ../backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../backend/app:/app
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: tracking_dev
+      POSTGRES_USER: tracking
+      POSTGRES_PASSWORD: tracking
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

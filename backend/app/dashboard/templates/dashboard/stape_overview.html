@@ -1,0 +1,100 @@
+{% extends "dashboard/base.html" %} {% block title %}STAPE Overview{% endblock%}
+{% block subtitle %} Ads IDs: <strong>{{ ads_ids_count }}</strong> | Od:
+<strong>{{ start_of_year }}</strong>
+{% endblock %} {% block content %}
+<div class="box-title">
+  <h2>STAPE Overview & Query Generator</h2>
+</div>
+
+<div class="row" style="grid-template-columns: 1fr 1fr; margin-bottom: 24px">
+  <div class="card">
+    <h3>Ads IDs (Excel / Sheets)</h3>
+    <button
+      class="badge"
+      style="border: none; cursor: pointer; margin-bottom: 10px"
+      onclick="copyTextarea('adsIdsBox')"
+    >
+      Kopiuj listę
+    </button>
+    <textarea
+      id="adsIdsBox"
+      readonly
+      style="
+        width: 100%;
+        height: 180px;
+        font-family: monospace;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+      "
+    >
+{{ ads_ids_lines }}</textarea
+    >
+  </div>
+
+  <div class="card">
+    <h3>BigQuery SQL</h3>
+    <button
+      class="badge"
+      style="border: none; cursor: pointer; margin-bottom: 10px"
+      onclick="copyTextarea('adsSqlBox')"
+    >
+      Kopiuj SQL
+    </button>
+    <textarea
+      id="adsSqlBox"
+      readonly
+      style="
+        width: 100%;
+        height: 180px;
+        font-family: monospace;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+      "
+    >
+{{ ads_query_sql }}</textarea
+    >
+  </div>
+</div>
+
+<div class="card">
+  <h3>Dane STAPE</h3>
+  {% if rows %}
+  <table>
+    <thead>
+      <tr>
+        <th>Client</th>
+        <th>Ads ID</th>
+        <th>Purchase</th>
+        <th>Events (STAPE)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ row.client }}</td>
+        <td>{{ row.ads_id }}</td>
+        <td>{{ row.purchase }}</td>
+        <td>{{ row.events_total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="placeholder">No STAPE data available yet.</div>
+  {% endif %}
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  function copyTextarea(id) {
+    const el = document.getElementById(id);
+    el.select();
+    el.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    // Mały bonus: zmiana tekstu przycisku po skopiowaniu
+    event.target.textContent = "Skopiowano!";
+    setTimeout(() => {
+      event.target.textContent = "Kopiuj";
+    }, 2000);
+  }
+</script>
+{% endblock %}

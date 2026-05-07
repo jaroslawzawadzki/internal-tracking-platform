@@ -1,0 +1,409 @@
+{% extends "dashboard/base.html" %}
+{% load dashboard_extras %}
+
+  
+    {% block content %}
+      <div class="grid">
+        <div class="card">
+          <h3>Aktywni klienci</h3>
+          <div class="value">{{ active_clients }}</div>
+        </div>
+        <div class="card">
+          <h3>Conversions (suma)</h3>
+          <div class="value">{{ total_conversions }}</div>
+        </div>
+        <div class="card">
+          <h3>Status</h3>
+          <div class="value">OK ✅</div>
+        </div>
+      </div>
+
+      <div class="row">
+
+  <!-- ========================= -->
+  <!-- LEWA KARTA: TABELA KLIENTÓW -->
+  <!-- ========================= -->
+  <div class="card">
+    <div class="box-title">
+      <h3 style="margin: 0">Tabela (placeholder)</h3>
+      <span class="muted">Wkrótce: dane z Sheeta</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          {% for col in columns %}
+            <th>{{ col }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr data-ads-id="{{ row|get_item:'Ads ID' }}">
+            {% for col in columns %}
+              <td
+                {% if col == "Client" %}
+                  onclick="loadClientFromRow(this)"
+                  style="cursor:pointer; text-decoration: underline;"
+                {% endif %}
+              >
+                {{ row|get_item:col }}
+              </td>
+            {% endfor %}
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="10">Brak danych</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========================= -->
+  <!-- PRAWA KARTA: SZCZEGÓŁY KLIENTA -->
+  <!-- ========================= -->
+  <div class="card">
+    <div class="box-title">
+      <h3 style="margin: 0">Szczegóły klienta</h3>
+      <span class="muted">Kliknij klienta</span>
+    </div>
+
+    <!-- WYKRES -->
+    <div style="margin-top:20px; height:300px;">
+      <canvas id="conversions-chart" height="180"></canvas>
+    </div>
+
+    <!-- INFO (ładowanie / komunikaty) -->
+    <div
+      id="conversion-results-info"
+      class="muted"
+      style="margin:6px 0;"
+    ></div>
+
+    <!-- TABELA WYNIKÓW -->
+    <div id="conversion-results" style="margin-top:12px;">
+      <em>Wyniki pojawią się tutaj…</em>
+    </div>
+
+    <!-- PLACEHOLDER NA START -->
+    <div
+      id="details-panel"
+      class="placeholder"
+      style="margin-top:12px;"
+    >
+      Kliknij klienta, aby zobaczyć konwersje
+    </div>
+  </div>
+</div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      let conversionsChart = null;
+      let sumsRequestId = 0;
+      let isCustomRange = false;
+      let lastGoodRange = null; // zapamiętuje ostatni poprawny zakres
+
+      function getDateRange() {
+        const preset = document.getElementById("date-preset")?.value || "30";
+        const fmt = (d) => d.toISOString().slice(0, 10);
+
+        // PRESETY
+        if (preset !== "custom") {
+          const today = new Date();
+          const end = new Date(today);
+          end.setDate(end.getDate() - 1); // wczoraj
+
+          const days = parseInt(preset, 10);
+          const start = new Date(end);
+          start.setDate(start.getDate() - (days - 1));
+
+          return { start: fmt(start), end: fmt(end) };
+        }
+
+        // CUSTOM RANGE
+        const from = document.getElementById("date-from")?.value;
+        const to = document.getElementById("date-to")?.value;
+
+        if (!from || !to) return null;
+
+        return { start: from, end: to };
+      }
+
+      function getSelectedConversions(data) {
+        return [
+          ...document.querySelectorAll('input[name="conversion"]:checked'),
+        ]
+          .map((el) => {
+            const name = el.dataset.name;
+            const source = el.dataset.source;
+            return data.conversions.find(
+              (c) => c.name === name && c.source === source,
+            );
+          })
+          .filter(Boolean);
+      }
+
+      function renderResultsTable(conversions, sumsMap) {
+        let html = `
+                 <table style="width:100%; margin-top:10px; border-collapse: collapse;">
+                   <thead>
+                     <tr>
+                       <th style="text-align:left;">Konwersja</th>
+                       <th style="text-align:left;">Typ</th>
+                       <th style="text-align:right;">Suma</th>
+                     </tr>
+                   </thead>
+                   <tbody>
+               `;
+
+        conversions.forEach((c) => {
+          const key = c.name + "|" + c.source;
+          const sum = sumsMap && sumsMap[key] != null ? sumsMap[key] : 0;
+
+          html += `
+                   <tr>
+                     <td>${c.name}</td>
+                     <td>${c.type}</td>
+                     <td style="text-align:right;"><strong>${sum}</strong></td>
+                   </tr>
+                 `;
+        });
+
+        html += `</tbody></table>`;
+        document.getElementById("conversion-results").innerHTML = html;
+      }
+
+      function renderChart(conversions, sumsMap) {
+        const ctx = document.getElementById("conversions-chart");
+        if (!ctx) return;
+
+        const labels = conversions.map((c) => c.name);
+        const data = conversions.map((c) => {
+          const key = c.name + "|" + c.source;
+          return sumsMap[key] ?? 0;
+        });
+
+        // jeśli wykres już istnieje – zniszcz (żeby nie nadpisywać)
+        if (conversionsChart) {
+          conversionsChart.destroy();
+        }
+
+        conversionsChart = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Liczba konwersji",
+                data: data,
+                backgroundColor: "#2563eb",
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false, // 👈 KLUCZ
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      }
+
+      function refreshSums(data) {
+        console.log("refreshSums() called for", data.ads_id);
+        const range = getDateRange();
+        const selected = getSelectedConversions(data);
+        console.log("range:", range);
+        // ⛔ jeśli zakres jest null → nie wołaj backendu
+
+        if (!range) {
+          // ✅ nie czyść tabeli, po prostu czekaj aż user ustawi obie daty
+          const infoDiv = document.getElementById("conversion-results-info");
+          if (infoDiv) infoDiv.textContent = "Wybierz obie daty (Od i Do)…";
+          return;
+        }
+
+        const resultsDiv = document.getElementById("conversion-results");
+        const infoDiv = document.getElementById("conversion-results-info");
+
+        if (!selected.length) {
+          resultsDiv.innerHTML = "<em>Nie wybrano żadnych konwersji.</em>";
+          return;
+        }
+
+        if (infoDiv) infoDiv.textContent = "Ładowanie…";
+
+        const myId = ++sumsRequestId;
+
+        fetch(`/dashboard/client/${data.ads_id}/sums/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            start_date: range.start,
+            end_date: range.end,
+            items: selected.map((c) => ({ name: c.name, source: c.source })),
+          }),
+        })
+          .then((r) => {
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            return r.json();
+          })
+          .then((resp) => {
+            if (myId !== sumsRequestId) return;
+
+            const sumsMap = {};
+            resp.results.forEach((r) => {
+              sumsMap[r.name + "|" + r.source] = r.sum;
+            });
+
+            renderResultsTable(selected, sumsMap);
+            renderChart(selected, sumsMap);
+
+            if (infoDiv) infoDiv.textContent = "";
+          })
+          .catch((err) => {
+            if (myId !== sumsRequestId) return;
+            console.error("SUMS ERROR:", err);
+            resultsDiv.innerHTML = `<span style="color:#b91c1c;">Błąd sum: ${err.message}</span>`;
+            if (infoDiv) infoDiv.textContent = "";
+          });
+      }
+
+      function loadClientConversions(adsId) {
+        const panel = document.getElementById("details-panel");
+        panel.classList.remove("placeholder");
+        panel.innerHTML = "Ładowanie danych…";
+
+        fetch(`/dashboard/client/${adsId}/conversions/`)
+          .then((r) => r.json())
+          .then((data) => {
+            const defaultCount = data.conversions.filter(
+              (c) => c.purchase_like,
+            ).length;
+
+            let html = `
+                     <strong>Ads ID:</strong> ${data.ads_id}<br><br>
+
+                     <div style="margin-bottom:10px;">
+                       <label class="muted"><strong>Zakres czasu:</strong></label><br>
+                       <select id="date-preset">
+                         <option value="7">Ostatnie 7 dni</option>
+                         <option value="30" selected>Ostatnie 30 dni</option>
+                         <option value="90">Ostatnie 90 dni</option>
+                         <option value="custom">Własny zakres</option>
+                       </select>
+                     </div>
+
+
+                     <div id="custom-range" style="display:none; margin-bottom:10px;">
+                       <label class="muted" style="display:inline-block; margin-right:8px;">
+                         Od:
+                         <input type="date" id="date-from" onclick="this.showPicker && this.showPicker()">
+                       </label>
+
+                       <label class="muted" style="display:inline-block;">
+                         Do:
+                         <input type="date" id="date-to" onclick="this.showPicker && this.showPicker()">
+                       </label>
+                     </div>
+
+                     <details>
+                       <summary style="cursor:pointer; font-weight:600;">
+                         Wybierz konwersje (${defaultCount} domyślnie zaznaczonych)
+                       </summary>
+
+                       <form id="conversions-form" style="margin-top:8px;">
+                   `;
+
+            data.conversions.forEach((c) => {
+              const checked = c.purchase_like ? "checked" : "";
+              html += `
+                       <label style="display:block; margin:4px 0;">
+                         <input type="checkbox"
+                                name="conversion"
+                                data-name="${c.name}"
+                                data-source="${c.source}"
+                                ${checked}>
+                         ${c.purchase_like ? "✅" : "❌"}
+                         <strong>${c.name}</strong>
+                         <span class="muted">(${c.type})</span>
+                       </label>
+                     `;
+            });
+
+            html += `
+                       </form>
+                     </details>
+
+                     <div id="conversion-results-info" class="muted" style="margin:6px 0;"></div>
+                     <div id="conversion-results" style="margin-top:12px;">
+                       <em>Wyniki pojawią się tutaj…</em>
+                     </div>
+                   `;
+
+            panel.innerHTML = html;
+
+            // start: od razu licz
+            refreshSums(data);
+
+            // checkboxy -> licz
+            document
+              .getElementById("conversions-form")
+              .addEventListener("change", () => {
+                refreshSums(data);
+              });
+
+            // preset -> pokaż/ukryj custom + licz
+            const presetSelect = document.getElementById("date-preset");
+            const customRange = document.getElementById("custom-range");
+
+            presetSelect.addEventListener("change", () => {
+              const isCustom = presetSelect.value === "custom";
+              customRange.style.display = isCustom ? "block" : "none";
+
+              // ✅ NIE licz od razu na custom (bo range będzie null)
+              if (!isCustom) {
+                refreshSums(data);
+              }
+            });
+
+            // custom daty -> licz
+            const fromInput = document.getElementById("date-from");
+            const toInput = document.getElementById("date-to");
+
+            [fromInput, toInput].forEach((inp) => {
+              if (!inp) return;
+
+              inp.addEventListener("input", () => {
+                isCustomRange = true; // ✅ ZAPAMIĘTAJ TRYB
+                presetSelect.value = "custom";
+                customRange.style.display = "block";
+
+                const r = getDateRange();
+                if (r) refreshSums(data);
+              });
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+            panel.innerHTML = "Błąd ładowania danych";
+          });
+      }
+
+      function loadClientFromRow(td) {
+        const tr = td.closest("tr");
+        const adsId = tr.dataset.adsId;
+        if (!adsId) {
+          alert("Brak Ads ID dla tego wiersza");
+          return;
+        }
+        loadClientConversions(adsId);
+      }
+    </script>
+  {% endblock %}
