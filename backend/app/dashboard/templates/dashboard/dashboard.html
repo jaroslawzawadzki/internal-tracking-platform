@@ -544,19 +544,23 @@ tbody tr td:last-child {
 
                   // Inteligenta kategoryzacja
                   const groups = {};
-                  data.conversions.forEach(c => {
-                      let cat = c.category;
-                      if (!cat) {
-                          const n = c.name.toLowerCase();
-                          if (n.includes('purchase') || n.includes('bestellung') || n.includes('kauf')) cat = 'PURCHASE';
-                          else if (n.includes('cart') || n.includes('koszyk')) cat = 'ADD_TO_CART';
-                          else if (n.includes('checkout')) cat = 'CHECKOUT';
-                          else if (n.includes('contact') || n.includes('kontakt')) cat = 'CONTACT / LEADS';
-                          else cat = 'OTHER';
-                      }
-                      if (!groups[cat]) groups[cat] = [];
-                      groups[cat].push(c);
-                  });
+                 data.conversions.forEach(c => {
+                        const n = c.name.toLowerCase();
+                        const isPurchaseName = n.includes('purchase') || n.includes('bestellung') || n.includes('kauf') || n.includes('sale');
+                        
+                        // Wymuszamy kategorię PURCHASE, jeśli nazwa pasuje (nawet jeśli backend mówi inaczej)
+                        let cat = isPurchaseName ? 'PURCHASE' : (c.category || 'OTHER');
+
+                        // Uproszczona reszta kategorii
+                        if (cat === 'OTHER') {
+                            if (n.includes('cart') || n.includes('koszyk')) cat = 'ADD_TO_CART';
+                            else if (n.includes('checkout')) cat = 'CHECKOUT';
+                            else if (n.includes('contact') || n.includes('kontakt')) cat = 'CONTACT / LEADS';
+                        }
+
+                        if (!groups[cat]) groups[cat] = [];
+                        groups[cat].push(c);
+                    });
 
                   // Tworzymy formularz raz
                   let html = `<form id="conversions-form">
@@ -593,16 +597,17 @@ tbody tr td:last-child {
                     <div style="padding: 12px 15px; background: white;">`;
                 
                items.forEach(c => {
-                    // Lista słów, które oznaczają zakup w Twoim systemie
                     const nameLower = c.name.toLowerCase();
-                    const isPurchase = nameLower.includes('purchase') || 
-                                    nameLower.includes('bestellung') || 
-                                    nameLower.includes('kauf') || 
-                                    nameLower.includes('sale') ||
-                                    nameLower.includes('conversion'); // na wszelki wypadek
+                    
+                    // Definiujemy CO CHCEMY widzieć na starcie
+                    const isActuallyPurchase = nameLower.includes('purchase') || 
+                                                nameLower.includes('bestellung') || 
+                                                nameLower.includes('kauf') || 
+                                                nameLower.includes('sale') ||
+                                                nameLower.includes('transaction');
 
-                    // Jeśli backend mówi, że to purchase LUB nasz JS to wykrył
-                    const checked = (c.purchase_like || isPurchase) ? "checked" : "";
+                    // IGNORUJEMY c.purchase_like z backendu, jeśli chcemy mieć pewność czystego startu
+                    const checked = isActuallyPurchase ? "checked" : "";
 
                     html += `
                         <label style="display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:0.85rem; cursor:pointer;">
