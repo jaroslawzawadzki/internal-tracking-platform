@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from multiprocessing import context
+
+from django.shortcuts import render,redirect
 from dashboard.data_sources import (
     load_monitoring_rows,
     load_stape_overview_rows,
@@ -18,10 +20,51 @@ from django.views.decorators.http import require_POST
 from asgiref.sync import sync_to_async
 from .scanner import test_scan # To zaimportuje funkcję z pliku scanner.py
 from django.template.loader import render_to_string
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from weasyprint import HTML
-from .scanner import test_scan  # Importujemy Twój skaner
+from .scanner import test_scan, get_ai_privacy_analysis  # Importujemy Twój skaner
+from .services.privacy_checker import PrivacyAuditService 
+import asyncio
+import os
+from django.contrib import messages
+from .data_sources import update_metrics_from_sheet # Twoja funkcja importu
 
+
+def run_mass_audit_view(request):
+    import asyncio
+    from .services.privacy_checker import PrivacyAuditService
+    
+    # Ścieżka, gdzie zapiszemy wynik (wewnątrz kontenera)
+    output_path = "audit_results_700.json"
+
+    async def run_and_save():
+        results = await PrivacyAuditService.run_batch_from_text()
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(results, f, indent=4)
+        return results
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    
+    try:
+        # To potrwa długo!
+        results = loop.run_until_complete(run_and_save())
+        return JsonResponse({"status": "Finished", "file_saved": output_path, "count": len(results)})
+    except Exception as e:
+        return JsonResponse({"status": "Error", "message": str(e)})
+    finally:
+        loop.close()
+
+
+def refresh_data_view(request):
+    # Wywołujemy funkcję, którą wcześniej napisaliśmy
+    # Pamiętaj, żeby przekazać tam Twój link z gid=392405850
+    csv_url = "https://docs.google.com/spreadsheets/d/1_1gVqt0LkFzVvdydOdMoHBjFlAa5W58I4IAKFlgYuRE/export?format=csv&gid=291644932"
+    
+    result = update_metrics_from_sheet(csv_url)
+    messages.success(request, result) # Wyśle komunikat "Zaktualizowano X wierszy"
+    
+    return redirect('/dashboard/overview/') # Wraca na stronę główną dashboardu
 
 def export_pdf(request):
     # 1. Pobieramy URL ze strony (przekazany w linku)
@@ -56,33 +99,61 @@ def export_pdf(request):
 
 
 def dashboard_view(request):
-    rows, monitoring_date = load_monitoring_rows()
+    # 1. Pobierz 'days' z URL (domyślnie 30)
+    days_param = request.GET.get('days', '30') 
+    
+    try:
+        days_int = int(days_param)
+    except ValueError:
+        days_int = 30
+
+    # 2. Pobierz dane do tabeli na podstawie zakresu dni
+    rows, monitoring_date = load_monitoring_rows(days=days_int)
+
+    # 3. NOWOŚĆ: Zbuduj payload SQL na ten sam zakres dni
+    # Przekazujemy days_int, żeby BigQuery wiedziało, jaki zakres odświeżyć
+    payload = build_ads_query_payload(days=days_int)
 
     context = {
         "title": "SST Dashboard – Monitoring",
-        "subtitle": "SST vs Classic vs GA4 (health check)",
+        "subtitle": f"SST vs Classic vs GA4 (health check) - Last {days_int} days",
         "last_refresh": str(monitoring_date) if monitoring_date else "—",
         "active_clients": len(rows),
         "total_conversions": "—",
         "columns": ["Client", "Date", "Classic Purchase", "SST Purchase", "GA4 Purchase", "Status"],
         "rows": rows,
+        "selected_days": days_int,
+        
+        # Przekazujemy wygenerowany SQL do szablonu (np. do modala lub przycisku kopiowania)
+        "bq_sql": payload.get("bq_sql", ""),
+        "start_date": payload.get("start_date", ""),
     }
+    
     return render(request, "dashboard/dashboard.html", context)
 
 
 def dashboard_overview_view(request):
-    
     today = timezone.now().date()
     start_date = date(today.year, 1, 1)
     end_date = today - timedelta(days=1)
 
-    rows = load_overview_rows(start_date, end_date)
+    # 1. Pobieramy "paczkę" danych zamiast samej listy
+    data_bundle = load_overview_rows(start_date, end_date)
+
+    # 2. Rozdzielamy to na wiersze do tabeli i statystyki do kafli
+    rows = data_bundle["rows"]
+    stats = data_bundle["stats"]
 
     context = {
         "title": "SST Dashboard – Overview (LIVE)",
         "subtitle": f"{start_date} – {end_date} • Classic vs GA4 vs SST",
         "last_refresh": f"{start_date} – {end_date}",
-        "active_clients": len(rows),
+        
+        # Używamy danych z obiektu stats
+        "active_clients": stats["total_clients"],
+        "health_score": stats["health_score"],
+        "stape_status": stats["stape_status"],
+        
         "total_conversions": "—",
         "columns": [
             "Client",
@@ -96,7 +167,7 @@ def dashboard_overview_view(request):
             "STAPE Events",
             "Status",
         ],
-        "rows": rows,
+        "rows": rows,  # Tabela znowu dostaje swoją listę
     }
     return render(request, "dashboard/dashboard.html", context)
 
@@ -120,16 +191,20 @@ def stape_overview_view(request):
 def stape_overview_view(request):
     rows = load_stape_overview_rows()
     payload = build_ads_query_payload()
+    
+    # Naprawa: usuwamy odwołanie do 'context.get', którego nie ma
+    # Zamiast tego używamy po prostu aktualnego roku
+    current_year = timezone.now().year
 
     return render(
         request,
         "dashboard/stape_overview.html",
         {
             "rows": rows,
-            "ads_ids_lines": payload["ids_lines"],
-            "ads_query_sql": payload["bq_sql"],
-            "start_of_year": payload["start_of_year"],
-            "ads_ids_count": len(payload["ids"]),
+            "ads_ids_lines": payload.get("ids_lines", ""),  # .get() jest bezpieczniejsze
+            "ads_query_sql": payload.get("bq_sql", ""),
+            "start_of_year": current_year,                  # Tutaj była przyczyna błędu
+            "ads_ids_count": len(payload.get("ids", [])),
         }
     )
 
@@ -240,20 +315,140 @@ def client_sums_view(request, ads_id):
 
 def privacy_audit_view(request):
     target_url = request.GET.get('url')
-    report = None
+    # Sprawdzamy, czy widok jest generowany dla PDF (ustawiane w funkcji eksportu)
+    is_pdf = request.GET.get('pdf') == 'true'
     
+    # PDF ZAWSZE po niemiecku, dashboard wedle wyboru
+    lang = 'de' if is_pdf else request.GET.get('lang', 'pl')
+    
+    report = None
+
+    translations = {
+        'pl': {
+                'title': 'Ondua Audyt Prywatności',
+                'nav_audit': 'Skaner Prywatności',
+                'btn_scan': 'SKANUJ PONOWNIE',
+                'btn_pdf': 'POBIERZ PDF',
+                'card_cookies': 'Ciasteczka / Cookies',
+                'card_https': 'Szyfrowanie HTTPS',
+                'card_trackers': 'Zewnętrzne Trackery',
+                'status_yes': 'TAK',
+                'status_no': 'NIE',
+                'status_missing': 'BRAK',
+                'header_trackers': 'Wykryte Trackery',
+                'header_security': 'Bezpieczeństwo Nagłówków',
+                'header_cookie_details': 'Szczegóły Ciasteczek (Przed zgodą)',
+                'header_network': 'Szczegóły Żądań Sieciowych',
+                'col_origin': 'Pochodzenie',
+                'col_name': 'Nazwa / Dostawca',
+                'col_domain': 'Domena',
+                'col_category': 'Kategoria',
+                'col_security': 'Bezpieczeństwo',
+                'col_status': 'Status',
+                'col_method': 'Metoda',
+                'visual_proof': 'Dowód wizualny (Stan przed zgodą)',
+                'visual_user': 'Widok widoczny dla użytkownika',
+                'visual_deep': 'Techniczna analiza "Deep Scan"',
+                'footer_copy': 'Raport wygenerowany automatycznie przez Ondua Audit Tool.',
+            },
+        'de': {
+                'title': 'Ondua Privacy Audit', # Nagłówek okna
+                'nav_audit': 'Datenschutz-Scanner', 
+                'btn_scan': 'ERNEUT SCANNEN',
+                'btn_pdf': 'PDF HERUNTERLADEN',
+                'card_cookies': 'Cookies / Kekse',
+                'card_https': 'HTTPS-Verschlüsselung',
+                'card_trackers': 'Externe Tracker',
+                'status_yes': 'JA',
+                'status_no': 'NEIN',
+                'status_missing': 'FEHLT',
+                'header_trackers': 'Erkannte Tracker',
+                'header_security': 'Header-Sicherheit',
+                'header_cookie_details': 'Cookie-Details (Pre-Consent)',
+                'header_network': 'Netzwerk-Inspector',
+                'col_origin': 'Herkunft',
+                'col_name': 'Name / Anbieter',
+                'col_domain': 'Domain',
+                'col_category': 'Kategorie',
+                'col_security': 'Sicherheit',
+                'col_status': 'Status',
+                'col_method': 'Methode',
+                'visual_proof': 'Visueller Nachweis (Vor der Einwilligung)',
+                'visual_user': 'Vorderansicht (Benutzeransicht)',
+                'visual_deep': 'Technische "Deep Scan" Analyse',
+                'footer_copy': 'Bericht automatisch generiert von Ondua Audit Tool.',
+            }
+    }
+
+    t = translations.get(lang, translations['pl'])
+
     if target_url:
-        # 1. Poprawiamy protokół
         if not target_url.startswith(('http://', 'https://')):
             target_url = 'https://' + target_url
-            
-        # 2. Wywołujemy skaner (zwykłe wywołanie, bez await)
-        # Przekazujemy target_url, a wynik zapisujemy do report
         report = test_scan(target_url)
-    
+
     return render(request, "dashboard/audit_results.html", {
         "report": report,
         "target_url": target_url,
-        "title": "Skaner Prywatności"
+        "t": t,
+        "lang": lang,
+        "is_pdf": is_pdf
     })
 
+
+
+def privacy_audit_view(request):
+    # 1. Pobieramy parametry
+    target_url = request.GET.get('url', '')
+    lang = request.GET.get('lang', 'pl')
+    is_pdf = request.GET.get('pdf') == 'true'
+    
+    # 2. DEFINIUJEMY SŁOWNIK (TUTAJ LUB WYCIĄGNIĘTY WYŻEJ)
+    translations = {
+        'pl': {
+            'nav_audit': 'Skaner Prywatności',
+            'card_cookies': 'Ciasteczka',
+            # ... reszta kluczy ...
+        },
+        'de': {
+            'nav_audit': 'Datenschutz-Scanner',
+            'card_cookies': 'Cookies',
+            # ... reszta kluczy ...
+        }
+    }
+
+    # 3. KLUCZOWA POPRAWKA: Definiujemy 't' ZANIM wejdziemy w jakiekolwiek if-y
+    t = translations.get(lang, translations['pl'])
+    report = None
+
+    # 4. Teraz idzie reszta logiki
+    if target_url:
+        if not target_url.startswith(('http://', 'https://')):
+            target_url = 'https://' + target_url
+            
+        try:
+            report = test_scan(target_url)
+            if report and not report.get('error'):
+                report['ai_analysis'] = get_ai_privacy_analysis(report)
+        except Exception as e:
+            report = {'error': str(e)}
+
+    # 5. Tutaj linia 347 - teraz 't' na pewno istnieje!
+    return render(request, "dashboard/audit_results.html", {
+        "report": report,
+        "target_url": target_url,
+        "t": t,
+        "lang": lang,
+        "is_pdf": is_pdf
+    })
+
+def get_ai_analysis_view(request):
+    target_url = request.GET.get('url')
+    # Tutaj możesz pobrać dane z bazy/cache zamiast skanować od nowa
+    # Na potrzeby testu symulujemy wywołanie Gemini:
+    report_data = {
+        'cookies_count': 19, # pobierz to z sesji lub bazy
+        # ... reszta danych
+    }
+    analysis = get_ai_privacy_analysis(report_data)
+    return JsonResponse({'analysis': analysis})

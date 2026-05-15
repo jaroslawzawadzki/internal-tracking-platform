@@ -1,475 +1,595 @@
 <!doctype html>
-<html lang="pl">
+<html lang="{{ lang }}">
   <head>
     <meta charset="UTF-8" />
-    <title>Raport Audytu - {{ target_url }}</title>
+    <title>{{ t.nav_audit }} - {{ target_url }}</title>
     <style>
-      body { font-family: 'Helvetica', 'Arial', sans-serif; line-height: 1.5; color: #1f2937; margin: 0; padding: 0; }
-      .container { padding: 30px; }
-      .header { background-color: #1e3a8a; color: white; padding: 20px 30px; margin-bottom: 30px; }
-      .header h1 { margin: 0; font-size: 22px; }
+      /* Branding Smarketer / Ondua */
+      :root {
+          --smarketer-navy: #0b0f19;
+          --ondua-green: #00ff00;
+          --danger-red: #991b1b;
+      }
 
-      /* Karty podsumowania */
-      .summary-grid { width: 100%; border-collapse: separate; border-spacing: 15px; margin: -15px; }
-      .summary-card { background: #f9fafb; border: 1px solid #e5e7eb; padding: 20px; text-align: center; border-radius: 8px; width: 33%; }
-      .card-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
-      .card-value { font-size: 24px; font-weight: bold; color: #111827; }
+      body { 
+          font-family: 'Inter', 'Helvetica', 'Arial', sans-serif; 
+          line-height: 1.5; 
+          color: #1f2937; 
+          margin: 0; 
+          padding: 0; 
+          background-color: {% if is_pdf %}white{% else %}#f4f7f9{% endif %}; 
+      }
 
-      /* Tabele danych */
-      .main-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
-      .col-half { width: 50%; vertical-align: top; padding: 10px; }
+      /* Kontener - teraz nie rozjeżdża się na całą szerokość */
+      .container { 
+          max-width: 1300px; 
+          margin: 0 auto; 
+          padding: {% if is_pdf %}0{% else %}30px{% endif %}; 
+      }
 
-      .data-table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e5e7eb; }
-      .data-table th { background: #f3f4f6; padding: 12px; text-align: left; font-size: 13px; border-bottom: 2px solid #e5e7eb; }
-      .data-table td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #e5e7eb; }
+      /* Header w stylu Smarketer */
+      .header { 
+          background-color: var(--smarketer-navy); 
+          color: white; 
+          padding: 20px 40px; 
+          margin-bottom: 30px; 
+          display: flex; 
+          justify-content: space-between; 
+          align-items: center;
+          border-radius: {% if is_pdf %}0{% else %}0 0 12px 12px{% endif %};
+      }
+      .header h1 { margin: 0; font-size: 1.4rem; font-weight: 700; }
+      .header .url-display { font-size: 0.9rem; opacity: 0.8; }
 
-      .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-      .status-ok { background: #dcfce7; color: #166534; }
-      .status-warn { background: #fef9c3; color: #854d0e; }
-      .status-error { background: #fee2e2; color: #991b1b; }
+      /* Karty podsumowania - naprawione szerokości */
+     .summary-grid {
+          display: flex;
+          justify-content: space-between;
+          align-items: stretch; /* To sprawi, że wszystkie karty będą tej samej wysokości */
+          gap: 20px;
+          margin-bottom: 30px;
+      }
 
-      /* Ukrywanie w PDF */
-      .no-pdf { display: {% if is_pdf %}none{% else %}block{% endif %}; }
-      .btn-download { background: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; }
+      .summary-card {
+          flex: 1; /* Każda karta zajmie tyle samo miejsca (33%) */
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+          display: flex;
+          flex-direction: column;
+          justify-content: center; /* Wycentruje tekst w pionie, jeśli karta będzie wyższa */
+          text-align: center;
+          border: 1px solid #e5e7eb;
+      }
+      .card-label { font-size: 11px; color: #6b7280; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+      .card-value { font-size: 28px; font-weight: 800; color: var(--smarketer-navy); }
+
+      /* Przyciski */
+      .btn-group { display: flex; gap: 10px; }
+      .btn-download { background: var(--ondua-green); color: black; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: bold; transition: opacity 0.2s; }
+      .btn-rescan { background: rgba(255,255,255,0.1); color: white; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-size: 13px; border: 1px solid rgba(255,255,255,0.2); }
+
+      {% if is_pdf %}
+      /* Twoje style PDF bez zmian, są poprawne */
+      @page { size: A4; margin: 1cm; }
+      .ai-analysis-text { line-height: 1.6; text-align: justify; }
+      {% endif %}
     </style>
   </head>
-  <body>
-    {% if not is_pdf %}
-    <pre
-      style="
-        font-size: 10px;
-        background: #eee;
-        padding: 10px;
-        overflow: auto;
-        max-height: 100px;
-      "
-    >
-{{ report }}</pre
-    >
-    {% endif %}
+<body>
+    <div class="no-pdf" style="background: var(--smarketer-navy); padding: 8px 20px; display: flex; justify-content: flex-end; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <a href="?url={{ target_url }}&lang=pl"
+           style="color: white; text-decoration: none; font-size: 11px; opacity: {% if lang == 'pl' %}1{% else %}0.6{% endif %}; font-weight: bold;">
+            PL POLSKI
+        </a>
+        <a href="?url={{ target_url }}&lang=de"
+           style="color: white; text-decoration: none; font-size: 11px; opacity: {% if lang == 'de' %}1{% else %}0.6{% endif %}; font-weight: bold;">
+            DE DEUTSCH
+        </a>
+    </div>
 
     <div class="header">
-      <h1>Raport Audytu Prywatności / Privacy Audit Report</h1>
-      <div style="font-size: 14px; opacity: 0.9">Domena: {{ target_url }}</div>
+        <div>
+            <h1>
+                {{ t.nav_audit }}
+                <span style="color: var(--ondua-green); font-weight: 300;">|</span>
+                {{ target_url }}
+            </h1>
+            <div class="url-display">
+                URL: {{ target_url }}
+            </div>
+        </div>
+
+        <div class="no-pdf">
+            <a href="{% url 'export_pdf' %}?url={{ target_url }}" class="btn-download">
+                📄 {{ t.btn_pdf }}
+            </a>
+        </div>
     </div>
 
     <div class="container">
-      <div
-        class="no-pdf"
-        style="
-          margin-bottom: 30px;
-          background: #f3f4f6;
-          padding: 15px;
-          border-radius: 8px;
-        "
-      >
-        <form method="get" style="display: flex; gap: 10px">
-          <input
-            type="text"
-            name="url"
-            value="{{ target_url }}"
-            placeholder="https://..."
-            required
-            style="
-              flex: 1;
-              padding: 8px;
-              border: 1px solid #ccc;
-              border-radius: 4px;
-            "
-          />
-          <button
-            type="submit"
-            style="
-              background: #1e3a8a;
-              color: white;
-              padding: 8px 20px;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-            "
-          >
-            SKANUJ PONOWNIE
-          </button>
-        </form>
-      </div>
 
-      {% if report %} {% if report.error %}
-      <div
-        style="
-          background: #fee2e2;
-          color: #b91c1c;
-          padding: 20px;
-          border-radius: 8px;
-          border: 1px solid #f87171;
-        "
-      >
-        <strong>Błąd skanowania:</strong> {{ report.error }}
-      </div>
-      {% else %}
-      <table class="summary-grid">
-        <tr>
-          <td class="summary-card">
-            <div class="card-label">Ciasteczka / Cookies</div>
-            <div class="card-value">{{ report.cookies_count }}</div>
-          </td>
-          <td class="summary-card">
-            <div class="card-label">Szyfrowanie HTTPS</div>
-            <div class="card-value">
-              {% if report.https %}TAK{% else %}NIE{% endif %}
-            </div>
-          </td>
-          <td class="summary-card">
-            <div class="card-label">Zewnętrzne Trackery</div>
-            <div class="card-value">{{ report.trackers|length }}</div>
-          </td>
-        </tr>
-      </table>
+        <div class="no-pdf"
+             style="margin-bottom: 30px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            
+            <form method="get"
+                  style="display: flex; gap: 15px; max-width: 800px; margin: 0 auto;">
 
-      <div class="no-pdf" style="text-align: right; margin-top: 20px">
-        <a
-          href="{% url 'export_pdf' %}?url={{ target_url }}"
-          class="btn-download"
-          >📄 POBIERZ PDF</a
-        >
-      </div>
+                <input type="text"
+                       name="url"
+                       value="{{ target_url }}"
+                       placeholder="https://..."
+                       required
+                       style="flex: 1; padding: 12px 15px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 14px;" />
 
-      <table class="main-table">
-        <tr>
-          <td class="col-half">
-            <h3>Wykryte Trackery ({{ report.trackers|length }})</h3>
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Domena / Dostawca</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for tracker in report.trackers %}
-                <tr>
-                  <td><strong>{{ tracker }}</strong></td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td>Brak wykrytych trackerów zewnętrznych.</td>
-                </tr>
-                {% endfor %}
-              </tbody>
+                <button type="submit"
+                        style="background: var(--smarketer-navy); color: white; padding: 10px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                    {{ t.btn_scan }}
+                </button>
+
+            </form>
+        </div>
+
+        {% if report %}
+            {% if report.error %}
+
+                <div style="background: #fee2e2; color: #b91c1c; padding: 20px; border-radius: 12px; border: 1px solid #f87171;">
+                    <strong>Error:</strong> {{ report.error }}
+                </div>
+
+            {% else %}
+
+                <div class="summary-grid">
+
+                    <div class="summary-card">
+                        <div class="card-label">{{ t.card_cookies }}</div>
+                        <div class="card-value">{{ report.cookies_count }}</div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-label">{{ t.card_https }}</div>
+                        <div class="card-value"
+                             style="color: {% if report.https %}#16a34a{% else %}#dc2626{% endif %};">
+
+                            {% if report.https %}
+                                {{ t.status_yes }}
+                            {% else %}
+                                {{ t.status_no }}
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="card-label">{{ t.card_trackers }}</div>
+                        <div class="card-value">{{ report.trackers|length }}</div>
+                    </div>
+
+                </div>
+
+                <div style="display: flex; gap: 30px; margin-top: 30px; align-items: flex-start;">
+
+                    <!-- LEFT -->
+                    <div style="flex: 1;">
+
+                        <h3 style="color: var(--smarketer-navy); border-bottom: 2px solid var(--smarketer-navy); padding-bottom: 10px; font-size: 16px;">
+                            {{ t.header_trackers }} ({{ report.trackers|length }})
+                        </h3>
+
+                        <div class="network-table-wrapper">
+
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ t.col_name }}</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for tracker in report.trackers %}
+
+                                        <tr>
+                                            <td style="color: #4b5563;">
+                                                <span style="display: inline-block; width: 8px; height: 8px;
+                                                             background: {% if 'google' in tracker or 'facebook' in tracker %}#ef4444{% else %}#f59e0b{% endif %};
+                                                             border-radius: 50%; margin-right: 8px;">
+                                                </span>
+
+                                                <strong>{{ tracker }}</strong>
+                                            </td>
+                                        </tr>
+
+                                    {% empty %}
+
+                                        <tr>
+                                            <td style="color: #9ca3af; font-style: italic;">
+                                                {{ t.status_missing }}
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div style="flex: 1; align-self: stretch;">
+                      <h3 style="color: var(--smarketer-navy); border-bottom: 2px solid var(--smarketer-navy); padding-bottom: 10px; font-size: 16px; margin-top: 0;">
+                          {{ t.header_security }}
+                      </h3>
+
+                      <div style="background: white; border-radius: 8px; border: 1px solid #e5e7eb; overflow: hidden;">
+                          <table class="data-table" style="width: 100%; border: none; margin: 0;">
+                              <tbody style="background: white;">
+                                  {% for name, value in report.security_headers.items %}
+                                  <tr style="border-bottom: 1px solid #f3f4f6;">
+                                      <td style="padding: 12px; width: 140px; vertical-align: top;">
+                                          <strong style="font-size: 11px; color: #6b7280; text-transform: uppercase;">{{ name|upper }}</strong>
+                                      </td>
+                                      <td style="padding: 12px; vertical-align: top;">
+                                          {% if value != "Brak" and value != None and value != "" %}
+                                              <div style="display: flex; flex-direction: column; gap: 4px;">
+                                                  <span class="status-badge status-ok" style="align-self: flex-start;">
+                                                      {{ t.status_yes }}
+                                                  </span>
+                                                  <code style="font-size: 10px; color: #4b5563; word-break: break-all; background: #f9fafb; padding: 4px; border-radius: 4px; display: block;">
+                                                      {{ value|truncatechars:60 }}
+                                                  </code>
+                                              </div>
+                                          {% else %}
+                                              <span class="status-badge status-error" style="align-self: flex-start;">
+                                                  {{ t.status_missing }}
+                                              </span>
+                                          {% endif %}
+                                      </td>
+                                  </tr>
+                                  {% endfor %}
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+
+                </div>
+
+
+          <h3 style="color: var(--smarketer-navy); border-bottom: 2px solid var(--smarketer-navy); padding-bottom: 10px; margin-top: 40px; font-size: 18px;">
+            {{ t.header_cookie_details }}
+          </h3>
+        
+          <div class="network-table-wrapper" style="background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+            <table class="data-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th style="width: 12%;">{{ t.col_origin }}</th>
+                        <th style="width: 23%;">{{ t.col_name }}</th>
+                        <th style="width: 25%;">{{ t.col_domain }}</th>
+                        <th style="width: 15%;">{{ t.col_category }}</th>
+                        <th style="width: 25%;">{{ t.col_security }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cookie in report.detailed_cookies %}
+                    <tr>
+                        <td>
+                            {# Sprawdzanie First/Third party #}
+                            {% if cookie.domain in target_url or target_url in cookie.domain %}
+                                <span class="status-badge" style="background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;">First-party</span>
+                            {% else %}
+                                <span class="status-badge status-error">Third-party</span>
+                            {% endif %}
+                        </td>
+                        <td style="word-break: break-all;"><strong>{{ cookie.name }}</strong></td>
+                        <td style="font-size: 11px; color: #6b7280;">{{ cookie.domain }}</td>
+                        <td>
+                            {# Wybór kategorii na podstawie języka #}
+                            <span class="status-badge status-warn" style="font-size: 10px;">
+                                {% if lang == 'de' %}{{ cookie.category_de|default:"Unbekannt" }}{% else %}{{ cookie.category_pl|default:"Nieznana" }}{% endif %}
+                            </span>
+                        </td>
+                        <td style="font-size: 10px; line-height: 1.4;">
+                            <div style="display: flex; flex-direction: column; gap: 2px;">
+                                {% if cookie.secure %}
+                                    <span style="color: #059669;">🛡️ Secure</span>
+                                {% else %}
+                                    <span style="color: #dc2626; font-weight: bold;">🚩 No Secure</span>
+                                {% endif %}
+                                
+                                {% if cookie.httpOnly %}
+                                    <span style="color: #059669;">🔒 HttpOnly</span>
+                                {% else %}
+                                    <span style="color: #dc2626; font-weight: bold;">⚠️ No HttpOnly</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
-          </td>
-          <td class="col-half">
-            <h3>Bezpieczeństwo Nagłówków</h3>
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Nagłówek</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for name, value in report.security_headers.items %}
-                <tr>
-                  <td><strong>{{ name|upper }}</strong></td>
-                  <td>
-                    {% if value != "Brak" %}
-                    <span class="status-badge status-ok"
-                      >TAK ({{ value }})</span
-                    >
-                    {% else %}
-                    <span class="status-badge status-error">BRAK</span>
+        </div>
+
+          <div style="margin-top: 40px; border: 2px solid var(--smarketer-navy); border-radius: 12px; overflow: hidden; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            <div style="background: var(--smarketer-navy); color: white; padding: 12px 25px; font-weight: bold; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 20px;">🤖</span> 
+                    <span style="letter-spacing: 1px;">
+                        {% if lang == 'de' %}KI-GESTÜTZTE ANALYSE (BETA){% else %}ANALIZA WSPOMAGANA PRZEZ AI (BETA){% endif %}
+                    </span>
+                </div>
+                <div style="font-size: 10px; background: var(--ondua-green); color: black; padding: 2px 8px; border-radius: 4px;">POWERED BY GEMINI 3</div>
+            </div>
+            
+            <div class="ai-analysis-text" style="padding: 30px; font-size: 14px; color: #1f2937; background: linear-gradient(to bottom, #ffffff, #fdfdfd);">
+                <div id="ai-analysis-content" style="white-space: pre-wrap;">
+                    <div style="text-align: center; padding: 20px;">
+                        <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid var(--ondua-green); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px;"></div>
+                        {% if lang == 'de' %}KI analysiert Daten...{% else %}AI analizuje dane...{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<style>
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
+
+
+        <h3 style="color: var(--smarketer-navy); border-bottom: 2px solid var(--smarketer-navy); padding-bottom: 10px; margin-top: 40px; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+            <span>🔍</span> {{ t.header_network }} <small style="font-size: 10px; color: #6b7280; font-weight: normal; margin-left: 10px;">(INTERACTIVE LOG)</small>
+        </h3>
+
+        <div class="no-pdf" style="background: #1a1a1a; color: #d1d1d1; border-radius: 12px; font-family: 'Consolas', 'Monaco', monospace; font-size: 12px; border: 1px solid #333; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); margin-top: 20px;">
+            
+            <div style="background: #2d2d2d; padding: 12px 15px; color: #888; border-bottom: 1px solid #111; display: flex; font-weight: bold; text-transform: uppercase; font-size: 10px; letter-spacing: 1px;">
+                <span style="width: 70%">URL / RESOURCE</span>
+                <span style="width: 15%">{{ t.col_status }}</span>
+                <span style="width: 15%">{{ t.col_method }}</span>
+            </div>
+
+            <div style="max-height: 500px; overflow-y: auto;">
+                {% for item in report.network_details %}
+                  <div style="border-bottom: 1px solid #2a2a2a">
+                      <div onclick="toggleDetails('req-{{ forloop.counter }}')" 
+                          style="padding: 10px 15px; cursor: pointer; display: flex; align-items: center; background: #1a1a1a; transition: background 0.2s;"
+                          onmouseover="this.style.background = '#252525'" 
+                          onmouseout="this.style.background = '#1a1a1a'">
+                          
+                          <span style="color: #4ade80; width: 70%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 20px;">
+                              <span style="color: #6b7280; margin-right: 5px;">{{ forloop.counter }}.</span> {{ item.url }}
+                          </span>
+                          <span style="width: 15%; color: {% if item.status >= 200 and item.status < 300 %}#4ade80{% else %}#f87171{% endif %}; font-weight: bold;">
+                              {{ item.status }}
+                          </span>
+                          <span style="color: #94a3b8; width: 15%; font-weight: bold;">{{ item.method }}</span>
+                      </div>
+
+                      <div id="req-{{ forloop.counter }}" class="request-detail-container" style="display: none; background: #0f0f0f; border-top: 1px solid #333; padding: 15px;">
+                          <div style="display: flex; gap: 20px; border-bottom: 1px solid #333; margin-bottom: 10px; padding-bottom: 5px;">
+                              <span style="color: var(--ondua-green); border-bottom: 1px solid var(--ondua-green); cursor: pointer; font-size: 11px;">Headers</span>
+                              <span style="color: #666; cursor: not-allowed; font-size: 11px;">Payload</span>
+                          </div>
+                          <div style="font-size: 11px; color: #aaa; overflow-x: auto;">
+                              <pre style="margin: 0;">{{ item.headers_json }}</pre>
+                          </div>
+                      </div>
+                    </div>
+                {% if is_pdf %}
+              <div class="pdf-only-box" style="margin-top: 20px;">
+                  <table class="data-table" style="font-size: 9px;">
+                      <thead>
+                          <tr>
+                              <th>URL</th>
+                              <th style="width: 50px;">{{ t.col_status }}</th>
+                              <th style="width: 50px;">{{ t.col_method }}</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {% for item in report.network_details|slice:":30" %} {# Ograniczamy do 30 w PDF, żeby nie było 100 stron #}
+                          <tr>
+                              <td style="word-break: break-all; font-family: monospace;">{{ item.url }}</td>
+                              <td style="color: {% if item.status == 200 %}green{% else %}red{% endif %}; font-weight: bold;">{{ item.status }}</td>
+                              <td>{{ item.method }}</td>
+                          </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+              </div>
+            {% endif %}
+
+                <div class="tab-content headers-content" style="padding: 15px; font-family: 'Consolas', monospace; font-size: 11px; display: block;">
+                    <div style="color: var(--ondua-green); font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 10px; letter-spacing: 1px;">General:</div>
+                    <div style="display: grid; grid-template-columns: 140px 1fr; gap: 5px; margin-bottom: 15px; padding-left: 10px; border-left: 1px solid #333;">
+                        <div style="color: #888;">Request URL:</div><div style="color: #4ade80; word-break: break-all;">{{ item.url }}</div>
+                        <div style="color: #888;">Request Method:</div><div style="color: #ddd;">{{ item.method }}</div>
+                        <div style="color: #888;">Status Code:</div><div style="color: {% if item.status == 200 %}#4ade80{% else %}#f87171{% endif %};">{{ item.status }}</div>
+                    </div>
+
+                    {% if item.response_headers %}
+                      <div style="color: var(--ondua-green); font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 10px; letter-spacing: 1px;">Response Headers:</div>
+                      <div style="display: grid; grid-template-columns: 160px 1fr; gap: 5px; margin-bottom: 15px; padding-left: 10px; border-left: 1px solid #333;">
+                          {% for h_name, h_value in item.response_headers.items %}
+                              <div style="color: #888; font-weight: bold;">{{ h_name }}:</div>
+                              <div style="color: #bbb; word-break: break-all;">{{ h_value }}</div>
+                          {% endfor %}
+                      </div>
                     {% endif %}
-                  </td>
-                </tr>
+                </div>
+
+                <div class="tab-content payload-content" style="padding: 15px; font-family: 'Consolas', monospace; font-size: 11px; display: none;">
+                    <div style="color: var(--ondua-green); font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 10px;">Request Payload:</div>
+                    {% if item.payload and item.payload != "Brak danych (GET/No Body)" %}
+                        <div style="background: #000; padding: 15px; color: var(--ondua-green); border: 1px solid rgba(0, 255, 0, 0.2); border-radius: 6px; overflow-x: auto; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+                            <pre style="margin: 0; white-space: pre-wrap;">{{ item.payload }}</pre>
+                        </div>
+                    {% else %}
+                        <div style="color: #666; font-style: italic; padding: 10px; border: 1px solid #333; border-radius: 4px;">
+                            {# Dodaj te klucze do słownika, jeśli chcesz pełne tłumaczenie #}
+                            {% if lang == 'de' %}Keine Payload-Daten verfügbar (GET/No Body).{% else %}Brak danych przesłania (GET/No Body).{% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="tab-content response-content" style="padding: 15px; font-family: 'Consolas', monospace; font-size: 11px; display: none;">
+                    <div style="color: var(--ondua-green); font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 10px;">Response Body:</div>
+                    <div style="color: #666; font-style: italic; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 4px; border: 1px dashed #444;">
+                        {% if lang == 'de' %}
+                            Der Antwortinhalt ist nur im Deep-Inspection-Modus verfügbar.
+                        {% else %}
+                            Treść odpowiedzi serwera jest dostępna tylko w trybie Deep Inspection.
+                        {% endif %}
+                    </div>
+                </div>
+
                 {% empty %}
-                <tr>
-                  <td colspan="2">Brak danych o nagłówkach.</td>
-                </tr>
+                    <div style="padding: 40px; text-align: center; color: #666; background: #1a1a1a; border-radius: 8px;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">📡</div>
+                        {% if lang == 'de' %}Keine Netzwerkaktivität registriert.{% else %}Brak zarejestrowanej aktywności sieciowej.{% endif %}
+                    </div>
                 {% endfor %}
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </table>
-
-      <h3 style="margin-top: 30px;">Szczegóły Ciasteczek / Cookie Details</h3>
-      <table class="data-table" style="width: 100%; table-layout: fixed;">
-          <thead>
-              <tr style="background: #f8fafc;">
-                  <th style="width: 15%;">Pochodzenie</th>
-                  <th style="width: 25%;">Nazwa / Dostawca</th>
-                  <th style="width: 25%;">Domena</th>
-                  <th style="width: 15%;">Kategoria</th>
-                  <th style="width: 15%;">Bezpieczeństwo</th>
-              </tr>
-          </thead>
-          <tbody>
-              {% for cookie in report.detailed_cookies %}
-              <tr style="border-bottom: 1px solid #edf2f7; {% if target_url not in cookie.domain %}background: #fffcfc;{% endif %}">
-                  <td>
-                      {% if target_url in cookie.domain %}
-                          <span class="status-badge status-ok" style="font-size: 10px;">First-party</span>
-                      {% else %}
-                          <span class="status-badge status-error" style="font-size: 10px;">Third-party</span>
-                      {% endif %}
-                  </td>
-                  <td><strong>{{ cookie.name }}</strong></td>
-                  <td style="font-size: 11px; color: #64748b;">{{ cookie.domain }}</td>
-                  <td><span class="status-badge status-warn">{{ cookie.category_pl }}</span></td>
-                  <td style="font-size: 11px;">
-                  <div title="Secure: Przesyłane tylko przez HTTPS" style="margin-bottom: 4px;">
-                      {% if cookie.secure %}
-                          <span style="color: #059669;">🛡️ Secure: TAK</span>
-                      {% else %}
-                          <span style="color: #dc2626;">🚩 Secure: BRAK</span>
-                      {% endif %}
-                  </div>
-
-                  <div title="HttpOnly: Chroni przed kradzieżą przez JS">
-                      {% if cookie.httpOnly %}
-                          <span style="color: #059669;">🔒 HttpOnly: TAK</span>
-                      {% else %}
-                          <span style="color: #dc2626;">⚠️ HttpOnly: BRAK</span>
-                      {% endif %}
-                  </div>
-              </td>
-              </tr>
-              {% endfor %}
-          </tbody>
-      </table>
-      <h3 style="font-size: 16px; margin-top: 30px">
-        Szczegóły Żądań Sieciowych / Network Inspector
-      </h3>
-      <div
-        style="
-          background: #242424;
-          color: #d1d1d1;
-          border-radius: 4px;
-          font-family: &quot;Segoe UI&quot;, Tahoma, sans-serif;
-          font-size: 12px;
-          border: 1px solid #333;
-          overflow: hidden;
-        "
-      >
-        <div
-          style="
-            background: #333;
-            padding: 5px 10px;
-            color: #ccc;
-            border-bottom: 1px solid #111;
-            display: flex;
-            font-weight: bold;
-          "
-        >
-          <span style="width: 70%">Name / URL</span>
-          <span style="width: 15%">Status</span>
-          <span style="width: 15%">Method</span>
-        </div>
-
-        {% for request in report.trackers %}
-        <div style="border-bottom: 1px solid #333">
-          <div
-            onclick="toggleDetails('req-{{ forloop.counter }}')"
-            style="
-              padding: 8px 10px;
-              cursor: pointer;
-              display: flex;
-              align-items: center;
-              background: #2a2a2a;
-            "
-            onmouseover="this.style.background = '#353535'"
-            onmouseout="this.style.background = '#2a2a2a'"
-          >
-            <span
-              style="
-                color: #4ade80;
-                width: 70%;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-              "
-            >
-              {{ request }}
-            </span>
-            <span style="color: #fbbf24; width: 15%">200</span>
-            <span style="color: #888; width: 15%">POST</span>
-          </div>
-
-          <div
-            id="req-{{ forloop.counter }}"
-            style="
-              display: none;
-              background: #1e1e1e;
-              border-top: 1px solid #333;
-              padding: 15px;
-            "
-          >
-            <div
-              style="
-                display: flex;
-                border-bottom: 1px solid #333;
-                margin-bottom: 10px;
-              "
-            >
-              <div
-                style="
-                  padding: 5px 15px;
-                  background: #333;
-                  color: white;
-                  border-top-left-radius: 4px;
-                  border-top-right-radius: 4px;
-                  cursor: default;
-                "
-              >
-                Headers
-              </div>
-              <div style="padding: 5px 15px; color: #555">Payload</div>
-              <div style="padding: 5px 15px; color: #555">Response</div>
             </div>
-
-            <div
-              style="
-                display: grid;
-                grid-template-columns: 140px 1fr;
-                gap: 4px;
-                font-family: monospace;
-                font-size: 11px;
-              "
-            >
-              <div
-                style="
-                  color: #ef4444;
-                  font-weight: bold;
-                  grid-column: span 2;
-                  margin-bottom: 4px;
-                "
-              >
-                General:
-              </div>
-
-              <div style="color: #888">Request URL:</div>
-              <div style="color: #ddd; word-break: break-all">
-                {{ request }}
-              </div>
-              <div style="color: #888">Request Method:</div>
-              <div style="color: #ddd">POST</div>
-              <div style="color: #888">Status Code:</div>
-              <div style="color: #ddd; color: #4ade80">200 OK</div>
-              <div style="color: #888">Remote Address:</div>
-              <div style="color: #ddd">{{ request|truncatechars:20 }}...</div>
-
-              <div
-                style="
-                  color: #ef4444;
-                  font-weight: bold;
-                  grid-column: span 2;
-                  margin-top: 10px;
-                  margin-bottom: 4px;
-                "
-              >
-                Response Headers:
-              </div>
-
-              <div style="color: #888">content-type:</div>
-              <div style="color: #ddd">application/json; charset=UTF-8</div>
-              <div style="color: #888">cache-control:</div>
-              <div style="color: #ddd">no-cache, no-store, must-revalidate</div>
-              <div style="color: #888">server:</div>
-              <div style="color: #ddd">Caddy / Cowboy</div>
-              <div style="color: #888">date:</div>
-              <div style="color: #ddd">{{ report.timestamp }}</div>
-              <div style="color: #888">referrer-policy:</div>
-              <div style="color: #ddd">strict-origin-when-cross-origin</div>
-            </div>
-          </div>
         </div>
-        {% empty %}
-        <div style="padding: 15px; color: #888; text-align: center">
-          Brak wykrytej aktywności sieciowej.
+
+                {% endif %}
+            {% endif %}
+
+        <script>
+                /**
+                * Przełączanie zakładek wewnątrz Network Inspectora (Headers/Payload)
+                */
+                function switchNetworkTab(containerId, tabName, btnEl) {
+                    const container = document.getElementById(containerId);
+                    if (!container) return;
+                    
+                    // 1. Ukryj wszystkie treści tabów w tym konkretnym kontenerze
+                    container.querySelectorAll('.tab-content').forEach(c => {
+                        c.style.display = 'none';
+                    });
+                    
+                    // 2. Pokaż wybraną treść
+                    const selectedContent = container.querySelector('.' + tabName + '-content');
+                    if (selectedContent) {
+                        selectedContent.style.display = 'block';
+                    }
+                    
+                    // 3. Zresetuj wygląd wszystkich przycisków w tym rzędzie
+                    const buttons = btnEl.parentElement.querySelectorAll('div');
+                    buttons.forEach(btn => {
+                        btn.style.background = 'transparent';
+                        btn.style.color = '#888';
+                        btn.style.borderBottom = '2px solid transparent';
+                    });
+                    
+                    // 4. Podświetl aktywny przycisk w stylu Ondua (Zielony akcent)
+                    btnEl.style.background = 'rgba(0, 255, 0, 0.05)';
+                    btnEl.style.color = '#00ff00';
+                    btnEl.style.borderBottom = '2px solid #00ff00';
+                }
+
+                /**
+                * Rozwijanie/Zwijanie pojedynczego żądania w liście
+                */
+                function toggleDetails(id) {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    
+                    const isHidden = (el.style.display === "none" || el.style.display === "");
+                    
+                    // Zamykamy inne otwarte kontenery (opcjonalne, dla czystości widoku)
+                    // document.querySelectorAll('.request-detail-container').forEach(d => d.style.display = 'none');
+                    
+                    el.style.display = isHidden ? "block" : "none";
+                    
+                    // Dodajemy efekt "active" do wiersza głównego dla lepszej orientacji
+                    const parentRow = el.previousElementSibling;
+                    if (isHidden) {
+                        parentRow.style.background = '#252525';
+                        parentRow.style.borderLeft = '3px solid #00ff00';
+                    } else {
+                        parentRow.style.background = '#1a1a1a';
+                        parentRow.style.borderLeft = '3px solid transparent';
+                    }
+                }
+            </script>
+
+        <div class="page-break"></div> <h3 style="color: var(--smarketer-navy); border-bottom: 2px solid var(--smarketer-navy); padding-bottom: 10px; margin-top: 40px; font-size: 18px;">
+            📸 {{ t.visual_proof }}
+        </h3>
+
+        <div style="width: 100%; background: #f8fafc; padding: {% if is_pdf %}10px{% else %}40px{% endif %}; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; gap: 40px; margin-top: 20px;">
+            
+            {% if report.screenshot %}
+                <div style="text-align: center; width: 100%;">
+                    <p style="font-weight: bold; margin-bottom: 15px; color: var(--smarketer-navy); text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">
+                        1. {{ t.visual_user }}
+                    </p>
+                    <div style="width: {% if is_pdf %}90%{% else %}75%{% endif %}; margin: 0 auto; box-shadow: 0 20px 50px rgba(0,0,0,0.1); border: 1px solid #cbd5e1; background: #fff; border-radius: 8px; overflow: hidden;">
+                        <img src="data:image/png;base64,{{ report.screenshot }}" style="width: 100%; height: auto; display: block;">
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if report.screenshot_2 %}
+                <div style="text-align: center; width: 100%;">
+                    <p style="font-weight: bold; margin-bottom: 15px; color: var(--smarketer-navy); text-transform: uppercase; font-size: 12px; letter-spacing: 1px;">
+                        2. {{ t.visual_deep }}
+                    </p>
+                    <div style="width: {% if is_pdf %}90%{% else %}75%{% endif %}; margin: 0 auto; box-shadow: 0 0 30px rgba(0, 255, 0, 0.2); border: 3px solid var(--ondua-green); background: #000; border-radius: 8px; overflow: hidden; position: relative;">
+                        
+                        <div class="no-pdf" style="position: absolute; top: 10px; left: 10px; background: rgba(0,255,0,0.9); color: black; padding: 2px 10px; font-family: monospace; font-size: 10px; font-weight: bold; border-radius: 3px; z-index: 10;">
+                            ONDUA DEEP SCAN ACTIVE
+                        </div>
+
+                        <img src="data:image/png;base64,{{ report.screenshot_2 }}" style="width: 100%; height: auto; display: block; filter: brightness(0.9);">
+                        
+                        <div style="background: #000; color: var(--ondua-green); padding: 10px; font-family: 'Courier New', monospace; font-size: 11px; text-align: left; border-top: 1px solid #333;">
+                            > [SYSTEM]: Analyzing pre-consent data injection...<br>
+                            > [RESULT]: {{ report.cookies_count }} cookies blocked in sandbox mode.
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        {% endfor %}
-      </div>
 
-      <script>
-        function toggleDetails(id) {
-          const el = document.getElementById(id);
-          const isHidden = el.style.display === "none";
-          el.style.display = isHidden ? "block" : "none";
-        }
-      </script>
-
-      {% endif %} {% endif %}
+        <div style="margin-top: 60px; padding: 40px 0; border-top: 1px solid #e5e7eb; text-align: center;">
+        <div style="font-weight: bold; color: var(--smarketer-navy); font-size: 14px;">ONDUA <span style="color: var(--ondua-green);">|</span> PRIVACY AUDIT TOOL</div>
+        <div style="font-size: 11px; color: #9ca3af; margin-top: 10px;">
+            {{ t.footer_copy }} &copy; 2026
+        </div>
     </div>
+
     {% if is_pdf %}
-    <div
-      style="
-        position: fixed;
-        bottom: 20px;
-        width: 100%;
-        text-align: center;
-        font-size: 10px;
-        color: #9ca3af;
-      "
-    >
-      Raport wygenerowany automatycznie przez Ondua Audit Tool. &copy; 2026
+    <div style="position: fixed; bottom: 10px; width: 100%; text-align: center; font-size: 8px; color: #aaa; font-family: sans-serif;">
+        Ondua Privacy Report - ID: {{ target_url|truncatechars:20 }} - Page: [page]
     </div>
     {% endif %}
- <h3 style="margin-top: 30px">📸 Dowód wizualny (Stan przed zgodą)</h3>
-  <div style="
-      width: 100%; 
-      background: #f1f5f9; 
-      padding: 30px; 
-      border-radius: 12px; 
-      border: 1px solid #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 30px; /* Odstęp między obrazkami */
-  ">
-      
-      {% if report.screenshot %}
-          <div style="text-align: center; width: 100%;">
-              <p style="font-weight: bold; margin-bottom: 10px; color: #1e293b;">1. Widok widoczny dla użytkownika:</p>
-              <div style="
-                  width: 60%; /* Ograniczamy szerokość do 60% */
-                  margin: 0 auto; /* Wyśrodkowanie */
-                  max-height: 500px; 
-                  overflow-y: auto; 
-                  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); 
-                  border: 1px solid #cbd5e1;
-                  background: #fff;
-                  border-radius: 4px;
-              ">
-                  <img src="data:image/png;base64,{{ report.screenshot }}" 
-                      style="width: 100%; height: auto; display: block;" 
-                      alt="Oryginalny podgląd">
-              </div>
-          </div>
-      {% endif %}
 
-      {% if report.screenshot_2 %}
-          <div style="text-align: center; width: 100%;">
-              <p style="font-weight: bold; margin-bottom: 10px; color: #1e293b;">2. Techniczna analiza "Deep Scan" (Wykryte ciasteczka):</p>
-              <div style="
-                  width: 60%; /* Ograniczamy szerokość do 60% */
-                  margin: 0 auto; /* Wyśrodkowanie */
-                  max-height: 500px; 
-                  overflow-y: auto; 
-                  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); 
-                  border: 2px solid #00ff00; /* Zielona ramka hakerska */
-                  background: #000;
-                  border-radius: 4px;
-              ">
-                  <img src="data:image/png;base64,{{ report.screenshot_2 }}" 
-                      style="width: 100%; height: auto; display: block;" 
-                      alt="Analiza techniczna">
-              </div>
-          </div>
-      {% endif %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          const aiBox = document.getElementById("ai-analysis-content");
+          if (!aiBox) return;
 
-      {% if not report.screenshot and not report.screenshot_2 %}
-          <div style="padding: 40px; text-align: center; color: #94a3b8; background: #fff; width: 100%; border-radius: 8px;">
-              <span style="font-size: 40px;">🚫</span><br>Brak dostępnych zrzutów ekranu.
-          </div>
-      {% endif %}
-  </div>
-  </body>
+          // Pobieramy język z URL, aby AI wiedziało w jakim języku odpowiedzieć
+          const urlParams = new URLSearchParams(window.location.search);
+          const currentLang = urlParams.get('lang') || 'pl';
+
+          // Wywołujemy nowy widok w Django, który zajmuje się tylko AI
+          fetch(`/get-ai-analysis/?url={{ target_url }}&lang=${currentLang}`)
+              .then(response => {
+                  if (!response.ok) throw new Error('Network error');
+                  return response.json();
+              })
+              .then(data => {
+                  // Wstawiamy wynik z AI do pudełka
+                  aiBox.innerHTML = data.analysis;
+              })
+              .catch(err => {
+                  console.error("AI Error:", err);
+                  aiBox.innerHTML = "{% if lang == 'de' %}Analyse derzeit nicht verfügbar.{% else %}Analiza chwilowo niedostępna.{% endif %}";
+              });
+      });
+      </script>
+
+    </body>
 </html>

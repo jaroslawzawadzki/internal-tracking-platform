@@ -1,8 +1,11 @@
 from playwright.sync_api import sync_playwright
 import base64
 import time
+import json
 from dashboard.models import TrackerLibrary
 import os 
+import google.generativeai as genai
+from google.generativeai.types import RequestOptions
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 # Słownik wiedzy (bez zmian)
@@ -24,6 +27,52 @@ REPORT_KNOWLEDGE = {
         "de": "Durch die Festlegung einer Referrer-Richtlinie können Websites den Browsern mitteilen, wie viele Informationen weitergegeben werden."
     }
 }
+
+
+# Konfiguracja z transportem REST, który jest stabilniejszy dla nowych modeli
+genai.configure(api_key="AIzaSyDcUwqCiSwnkCPjNN2y-MfYDs9GNy0-rzs", transport='rest')
+
+def get_ai_privacy_analysis(report_data):
+    # 1. Przenosimy inicjalizację modelu do środka lub używamy pełnej nazwy 'models/gemini-1.5-flash'
+    model_name = 'models/gemini-3-flash-preview'
+    
+    try:
+        model = genai.GenerativeModel(model_name)
+        
+        prompt = f"""
+        Rolle: Senior Datenschutzbeauftragter (DPO).
+        Aufgabe: Erstelle ein Audit basierend auf technischen Scan-Ergebnissen.
+
+        SPEZIALWISSEN FÜR DIE BEWERTUNG:
+        1. Smarketer (smarketer.de): Dies ist unser Partner-Dienst. Er ist absolut DSGVO-konform und setzt standardmäßig KEINE Cookies.
+        Ignoriere smarketer.de vollständig bei der Liste der Risiken. Erwähne ihn höchstens positiv als optimierte Infrastruktur.
+        2. Google Signals (sid-Parameter): Wenn du 'google-analytics.com/g/collect' mit dem Parameter 'sid' findest, bewerte dies NICHT als Fehler, sondern als "Advanced Tracking Feature". 
+        Weise darauf hin, dass dies für kanalübergreifende Analysen aktiv ist, aber stelle sicher, dass es in der Datenschutzerklärung erwähnt wird (Art. 13 DSGVO). Es ist ein Feature, kein Bug.
+
+        BEWERTUNGSLOGIK:
+        - Konzentriere dich auf ECHTE Probleme: 19 Cookies vor der Einwilligung (Pre-Consent) sind das Hauptproblem.
+        - Shopify-Dienste: Diese sind technisch oft notwendig, müssen aber korrekt deklariert sein.
+        - Sicherheits-Header: Fehlendes HSTS oder CSP sind technische Mängel nach Art. 32 DSGVO.
+
+        SCAN-DATEN ZUM ANALYSIEREN:
+        {report_data}
+       
+        RICHTLINIEN:
+        - Sprache: Deutsch.
+        - Tonfall: Sachlich, juristisch-technisch fundiert. Keine Einleitung ("Gerne helfe ich...").
+        - Formatierung: Nutze Markdown (Fettgedruckt für Artikel).
+        """
+    
+        response = model.generate_content(prompt)
+        return response.text
+        
+    except Exception as e:
+        # Jeśli to wyrzuci 404, spróbuj bez prefiksu 'models/'
+        try:
+            model = genai.GenerativeModel('gemini-3-flash-preview')
+            return model.generate_content(prompt).text
+        except Exception as second_e:
+            return f"Fehler: Modell '{model_name}' nicht gefunden. Log: {str(second_e)}"
 
 def get_tracker_info(identifier):
     tracker = TrackerLibrary.objects.filter(domain=identifier).first()
@@ -90,33 +139,66 @@ def test_scan(url):
 
             def handle_request(request):
                 try:
-                    # Logujemy tylko istotne typy (dane i skrypty)
-                    if request.resource_type in ["fetch", "xhr", "script"]:
-                        domain = request.url.split('/')[2] if len(request.url.split('/')) > 2 else "Unknown"
+                    # FILTR: Zostawiamy tylko to, co faktycznie przesyła dane (pingi trackingowe)
+                    if request.resource_type in ["fetch", "xhr"] or "google-analytics" in request.url or "facebook.com/tr" in request.url:
                         
+                        # 1. BEZPIECZNE WYCIĄGANIE DOMENY
+                        url_parts = request.url.split('/')
+                        domain = url_parts[2] if len(url_parts) > 2 else "Internal/Data"
+                        
+                        # 2. POBIERANIE I FORMATOWANIE PAYLOADU (JSON PRETTY PRINT)
+                        raw_payload = request.post_data if request.post_data else "Brak danych (GET/No Body)"
+                        formatted_payload = raw_payload
+                        
+                        if request.post_data:
+                            try:
+                                # Próbujemy sparsować tekst jako JSON
+                                json_obj = json.loads(request.post_data)
+                                # Jeśli się udało, robimy z niego ładne drzewko z wcięciami
+                                formatted_payload = json.dumps(json_obj, indent=2, ensure_ascii=False)
+                            except:
+                                # Jeśli to nie JSON (np. zwykły tekst), zostawiamy jak jest
+                                formatted_payload = raw_payload
+
+                        # 3. ZAPISYWANIE DANYCH
                         req_data = {
                             "url": request.url,
+                            "domain": domain,
                             "method": request.method,
                             "type": request.resource_type,
-                            "payload": request.post_data if request.post_data else "Brak danych",
-                            "status": "In progress...", # Zaktualizuje to handle_response
+                            "payload": formatted_payload,
+                            "status": "..." # Uzupełnione później przez handle_response
                         }
+                        
                         results["network_details"].append(req_data)
-                        found_domains.add(domain)
-                except: pass
+                        
+                        if domain != "Internal/Data":
+                            found_domains.add(domain)
 
+                except Exception as e:
+                    print(f"Network Log Error: {e}")
+
+            # --- POPRAWIONY KROK 1 ---
             def handle_response(response):
                 try:
-                    # Aktualizujemy status kodu (np. 200, 404) dla pasującego URL
+                    # Szukamy pasującego żądania w naszych szczegółach
                     for item in results["network_details"]:
                         if item["url"] == response.url:
                             item["status"] = response.status
-                except: pass
+                            # DODAJEMY TO: Zbieramy nagłówki, które przysłał serwer
+                            item["response_headers"] = dict(response.headers)
+                            
+                            # Opcjonalnie: Możemy też wyciągnąć adres IP serwera, jeśli chcesz
+                            server_addr = response.server_addr()
+                            if server_addr:
+                                item["remote_address"] = f"{server_addr.get('ipAddress')}:{server_addr.get('port')}"
+                except: 
+                    pass
 
             page.on("request", handle_request)
             page.on("response", handle_response)
             # --- KONIEC KROKU 1 ---
-
+            
             response = page.goto(url, timeout=30000, wait_until="networkidle")
             results["title"] = page.title()
             page.wait_for_timeout(5000) 

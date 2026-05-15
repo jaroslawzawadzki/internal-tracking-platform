@@ -6,3 +6,4 @@ playwright>=1.40.0
 shcheck>=0.1.3
 weasyprint
 django-weasyprint
+google-generativeai

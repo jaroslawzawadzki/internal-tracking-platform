@@ -8,7 +8,7 @@ import math
 
 SHEET_CSV_URL = os.getenv(
     "SHEET_CSV_URL",
-    "https://docs.google.com/spreadsheets/d/1_1gVqt0LkFzVvdydOdMoHBjFlAa5W58I4IAKFlgYuRE/export?format=csv&gid=119022929"
+    "https://docs.google.com/spreadsheets/d/1_1gVqt0LkFzVvdydOdMoHBjFlAa5W58I4IAKFlgYuRE/export?format=csv&gid=291644932"
 )
 
 

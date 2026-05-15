@@ -81,7 +81,7 @@ DATABASES = {
         "USER": "tracking",
         "PASSWORD": "tracking",
         "HOST": "postgres",
-        "PORT": 5432,
+        "PORT": "5432",
     }
 }
 

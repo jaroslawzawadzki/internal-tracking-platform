@@ -1,0 +1,5246 @@
+[
+    {
+        "url": "https://fightco.co.uk",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://pvmarkt.shop",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://graf-dichtungen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hofa-college.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hofa-plugins. de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://hofa-plugins. de\nCall log:\n  - navigating to \"https://hofa-plugins. de\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://hofa-akustik.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hofa-akustik.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://unchainedrobotics.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://meco-akademie.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://faircouture.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://edeka-suedwest.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_CONNECTION_REFUSED at https://edeka-suedwest.de/\nCall log:\n  - navigating to \"https://edeka-suedwest.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://petrhein.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://sanetta.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://diebarista.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://emsraum.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://climaqx.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://bandenwerbungpro.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://bandenwerbungpro.de/\nCall log:\n  - navigating to \"https://bandenwerbungpro.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://hopser-funfood.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://design4kids.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": "yes"
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://connect-pmu.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://fcb-basketball.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://fast-forward-fashion.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://drachenfels-design.de | https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"https://drachenfels-design.de | https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://mintyandmarla.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://tauchshop-online.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://licht-zubehoer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bergische-wohnmobile.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://camper-tom.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://waagen-muetze.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://heybee.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://tebo.ag",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://keyed.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://dielendealer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://finqaliving.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://shop.purway.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://shop.purway.de, https:\nCall log:\n  - navigating to \"https://shop.purway.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://zapf-garagen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://wingwheels.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bernardinos.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://myvelo.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://nextlevel-canvas.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://toniegreen.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ferryxpress.ch",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://eglo.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://cool-time.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://emmi-nail.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://hauptstadtkoffer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://filamentworld.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://eliotfurniture.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://bresser.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tibu-shop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://powerflex-deutschland.de, www.zimmermann-brems",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://powerflex-deutschland.de, www.zimmermann-brems\nCall log:\n  - navigating to \"https://powerflex-deutschland.de, www.zimmermann-brems\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://equinate.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://equinate.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://everki.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://deinsportsfreund.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://roto-frank.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://reparaturservice-sommer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://7i7.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://warm-on.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://consurio.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sweat-off.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tordoc.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hygiene-shop.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kuebler-sport",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://kuebler-sport/\nCall log:\n  - navigating to \"https://kuebler-sport/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://batteriespezialist.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://swmarkt24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hipster-baby.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kik.eu",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://andries24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shop.bauer-blue.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://lotus-design.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://brainbowtoys.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://cleverbuy.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mondesi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://powerflex-deutschland.de, www.zimmermann-brems",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://powerflex-deutschland.de, www.zimmermann-brems\nCall log:\n  - navigating to \"https://powerflex-deutschland.de, www.zimmermann-brems\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://softwarekaufen24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kupplung-vor-ort.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://identible.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://poco.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://akkuteile.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sportstech.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://foodsetter.de + whiskyfass.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://foodsetter.de + whiskyfass.de\nCall log:\n  - navigating to \"https://foodsetter.de + whiskyfass.de\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://foodsetter.de + whiskyfass.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://foodsetter.de + whiskyfass.de\nCall log:\n  - navigating to \"https://foodsetter.de + whiskyfass.de\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://meine-wunschleuchte.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://klingele24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://verdeck.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://korbmayer.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://verdeck.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://brb-lagertechnik.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://identbase.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://buhl-data.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://profichemie.com | geruchskontrolle.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"https://profichemie.com | geruchskontrolle.de\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://idealholz-carport.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://1a-yachtcharter.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://smarketer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://alpeiner.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://patientenfixierung.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://moebelando.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shop.devita-online.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sowero.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://masterpro.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schildershop24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kajakprofi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://lasermed-augenzentren.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_SSL_UNRECOGNIZED_NAME_ALERT at https://lasermed-augenzentren.de/\nCall log:\n  - navigating to \"https://lasermed-augenzentren.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://motor-oel-guenstig.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tbs-aachen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://scooter-center.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://1plushygiene.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://regold.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://jc-trauringe.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://jc-trauringe.de, https:\nCall log:\n  - navigating to \"https://jc-trauringe.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://gideons.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://led-lichtraum.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://uta.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://autoankauf.live",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kreidetafel.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kreidetafel.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://pepperworldhotshop.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schilderplus.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://solarisgroup.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://turboservice24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://trooper.ch",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://greenhero.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shop.eker-daunen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ielectro.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://dipasch.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shop.thefineartofbeauty.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://vnr.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://cossbeauty.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://verdeck.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rocket-tools.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ttt48.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://lizenzstar.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://emsraum.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://intra-tec.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sportstech.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://heavy-tuned.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://market-lifestore.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://equinate.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hof-university.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://hof-university.de/\nCall log:\n  - navigating to \"https://hof-university.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://goodsforbusiness.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://grow-guru.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rameder.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://jonnyfresh.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://jonnyfresh.de/\nCall log:\n  - navigating to \"https://jonnyfresh.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://diaprax.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://motorgarten.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://notebookstore.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schoener-leben-shop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mondesi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://deutsche-kredit-hilfe.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://deutsche-kredit-hilfe.de/\nCall log:\n  - navigating to \"https://deutsche-kredit-hilfe.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://helme-maedl.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://feine-algen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://dpf24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://yoko.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://alurit.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://blum-treuhand.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mscrm-addons.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sunlux24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://spiel-preis.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schildershop24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shop.pedag.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schlafshop.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gartenfachmarkt24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://fcb-basketball.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://greensystems-stadtmobiliar.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://photolini.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ichwillgartenm\u00f6bel.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://autoteile-online.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://spiegler.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://toner-dumping.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tradeo-gmbh.de; www.servershop24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://tradeo-gmbh.de; www.servershop24.de\nCall log:\n  - navigating to \"https://tradeo-gmbh.de; www.servershop24.de\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://motorgarten.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://identbase.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kunstundmagie.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://vinlorenc.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://institut-fuer-hypnose.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://khs.net",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://schoene-zaehne-berlin.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://winnersfood.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://yohann.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://Kare.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://apfelkiste.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sauna-life.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hoffmann-moebel.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sanitaet24.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://babyprofi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://casa-padrino.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://displayhersteller.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kurzwarenland.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://plotterfolie.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://powerflex-deutschland.de, www.zimmermann-brems",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://powerflex-deutschland.de, www.zimmermann-brems\nCall log:\n  - navigating to \"https://powerflex-deutschland.de, www.zimmermann-brems\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://powerflex-deutschland.de, www.zimmermann-brems",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://powerflex-deutschland.de, www.zimmermann-brems\nCall log:\n  - navigating to \"https://powerflex-deutschland.de, www.zimmermann-brems\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://phonedepot.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schuhglueck.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://Koffer.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://affengeilebilder24.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://ricks-motorcycles.shop",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tavarlin.shop, tavarlin.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://tavarlin.shop, tavarlin.com\nCall log:\n  - navigating to \"https://tavarlin.shop, tavarlin.com\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://uhrenband.ch",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://druckexperte.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://zenfulfillment.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://myaluprofil.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://dd-baustoffe.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rocket-tools.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://badewanne24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://creoven.eu",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://taynie.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://shop.funke-zeitschriften.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://phonelook.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://klingele24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://passiondecor.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://oelluxx24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://whiteboard-direct.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://dewall-design.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://biomazing.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://naehmaschinen-center.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://radicalracing.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://culpa-inkasso.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://spiel-preis.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bremer-weinkolleg.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rameder.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gutepflege24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schneiderprintware.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://identbase.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://getriebe.nrw",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ersatzteilshop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://greenstories.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://einlassband.eu",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://profichemie.com | geruchskontrolle.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"https://profichemie.com | geruchskontrolle.de\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://jc-trauringe.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://jc-trauringe.de, https:\nCall log:\n  - navigating to \"https://jc-trauringe.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://auto-bodenheimer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://cls-med.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://it-welt24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kmdi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schlummersack.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://amaiva.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://best-software.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://fotichaestli.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://trendmoebel24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://powerflex-deutschland.de, www.zimmermann-brems",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://powerflex-deutschland.de, www.zimmermann-brems\nCall log:\n  - navigating to \"https://powerflex-deutschland.de, www.zimmermann-brems\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://powerflex-deutschland.de, www.zimmermann-brems",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://powerflex-deutschland.de, www.zimmermann-brems\nCall log:\n  - navigating to \"https://powerflex-deutschland.de, www.zimmermann-brems\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://sumico.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://be-glass.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://diekleineschnullerbacke.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://luxnote.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kreissler24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://softwaresolution24.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://offerten24.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://payment-consulting.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://madena.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://ascountry-stone.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sportauspuff-store.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://renoverta.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://charlesandmarie.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://igienair.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://biodermis-shop.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://stewa.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schlumberger.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://emmi-dent.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://emmi-dent.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://crossequip.ch",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://sportshop-triathlon.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kuheiga.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bikebox-shop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://jugard-kuenstner.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gartenfachmarkt24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rameder.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://linus-store.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://myboshi.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sweat-off.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://dankundtreu.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://in-and-out-consulting.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ultraschall-welt.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://myoem.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kraft-reparaturdienst.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://actionsports.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ahorn-hotels.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://getraenkezapfanlagen.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sailer-verlag.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ledlager.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://radicalracing.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sportnahrung-engel.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://profolio.eu",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://filterboerse.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://aqmos.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://lichtwunder.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rickert-werkzeug.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://jms-fahrzeugteile.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://vorteilstarife.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://vorteilstarife.de, https:\nCall log:\n  - navigating to \"https://vorteilstarife.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://fuehlersysteme.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mondesi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gustero.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://holzboden-direkt.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://lv-kredit.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://klimaworld.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://tradingshenzhen.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://lizenzguru.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://roominabox.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://hno-cvk.charite.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://hno-cvk.charite.de/\nCall log:\n  - navigating to \"https://hno-cvk.charite.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://walkonthewildside.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://galeriebedarf.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://velken.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://coutobelle.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://saunabedarf-schneider.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ersatzteile.schueco.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_CERT_DATE_INVALID at https://ersatzteile.schueco.com/\nCall log:\n  - navigating to \"https://ersatzteile.schueco.com/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://sense-electra.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://inselhotel-potsdam.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://fansport24.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://fansport24.de, https:\nCall log:\n  - navigating to \"https://fansport24.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://ichliebedesign.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://pflegedienst-kremer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://led-leisten.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_SSL_PROTOCOL_ERROR at https://led-leisten.de/\nCall log:\n  - navigating to \"https://led-leisten.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://schuhe24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://vorteilstarife.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://vorteilstarife.de, https:\nCall log:\n  - navigating to \"https://vorteilstarife.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://bikebox-shop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tour-made.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gabionen24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://buhl-data.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://neoneverglow.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://Druckspezialist.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://aproposwein.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://belando.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://oelluxx24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://fansport24.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://fansport24.de, https:\nCall log:\n  - navigating to \"https://fansport24.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://smarketer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://buehnen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hufeland.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gestalterbank.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://polaris-tours.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://automattenland.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rocket-tools.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hemdenbox.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://pch-shop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://efaflex.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hans-natur.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gartenfachmarkt24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://akkushop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://terramedus.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://buerotschudi.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://buerotschudi.ch/\nCall log:\n  - navigating to \"https://buerotschudi.ch/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://dein-goldankauf.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://guenstigwohnen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://jms-fahrzeugteile.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://cinquestore.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://trameo.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://voucherwonderland.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://krauterie.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://auto-id247.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://duschmeister.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://doc-cirrus.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://teegschwendner.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://smatano.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://feine-algen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://moebel-style.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tiershop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://zahnarzt-drseidel.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://i-phonewerkstatt.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://1-stop.shop",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kartonagen-schmidt.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://beliani.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://klingspor.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schuh-okay.shop",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bauschnell.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bierzapfen-shop.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://pin-ag.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://meine-kueche.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://wassermanufaktur.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gutschild.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://softgarden.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://crazydetectors.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "no",
+                "analytics": "no",
+                "preferences": "no",
+                "sale_of_data": "no"
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://2-flowerpower.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://senfkorn-kita.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://unternehmen24.info",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kickerkult.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://Futterbauer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://collamin.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://penfabrik.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://profolio.eu",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://dittrich-naehmaschinen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tauchershop.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://fansport24.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://fansport24.de, https:\nCall log:\n  - navigating to \"https://fansport24.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://stanbarry.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://rameder.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rameder.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rameder.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://erlich-bauhandel.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://united-promotion.eu",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://Kindermaxx.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://btec24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://e-cooline.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kletterbude.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mondesi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://notebookgalerie.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mondesi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sport-tec.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://jonnyfresh.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://jonnyfresh.de/\nCall log:\n  - navigating to \"https://jonnyfresh.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://livingfloor.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://auto-id247.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://elten.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sd-dresden.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://patientenfixierung.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://yoga-vidya.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://akkushop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://akkushop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://garmin.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://spiel-preis.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://enchantingtravels.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schutzhuellenprofi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://btec24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://it-nerd24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://teamsport-philipp.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://moebelmarkt.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://wohnpark-binzen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://profi-tack.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://moebelmarkt.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://winespecials.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_CERT_DATE_INVALID at https://winespecials.de/\nCall log:\n  - navigating to \"https://winespecials.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://stoffe-hemmers.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://avena.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://knuffelwuff.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://onlinezoo.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://foliencenter24.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gesundheitsmanufaktur.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://reinica.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://www.teppich-natur.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://revox.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://dailydream.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://klippshop.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://aurasoma.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://heimundgarten24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://herder.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://badfabrik24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://fuetternundfit.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shkshop.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://zeg-holz.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://exxatron.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://nilo-hamburg.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://schweizer-edelmetallhandel.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://markusdoettling.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://spiegler.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kochblume.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://armypoint.ch",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://schockemoehle-sports.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://dieklimafreunde.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hoppediz.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://camelot-shop.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://noelie.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://parkcontrol24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tuning-parts24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schmusewolke.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://myspa.me",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://panda-tierversicherung.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://moebelmarkt.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://auto-id247.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kroschke.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kraus-shop.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sanetta.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://zapf-garagen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://moebelmarkt.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://zapf-garagen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://seezon.co",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://deitert.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://icelandic-horse.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://marcelpaa.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://venturama-solar.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://wunderbad.eu",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://alltickets.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://outdoorsurvival.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://Bps-protect.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://einfach-dichtungen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://truebenecker.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://deitert.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://deitert.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schockemoehle.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://jansen-france.fr",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://1001coques.fr",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schlafshop.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://andre.reuss@omg.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rollenplus.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://buchmann.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shop.shp-primaflex.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://blackchilimesser.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://biggastro.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://surfari.ch",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://bresko.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://lanakk.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: Timeout 20000ms exceeded.\nCall log:\n  - navigating to \"https://lanakk.com/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://locus-bauunternehmen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kik.eu",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://warimex.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mySWOOOP.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://janado.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://shop.trikon.it",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://birkenstock.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: Timeout 20000ms exceeded.\nCall log:\n  - navigating to \"https://birkenstock.com/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://atvshop.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tropic-shop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://vidal-teppiche.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://faber-castell.fr",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bundesverkehrsamt.online",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://lowa.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://lederfischer.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://jubee.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://qconnex.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://koffer24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bigmoebel.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://leuchtreklameparadies.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://Floristikcenter.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://kern-bildungsgesellschaft.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://akkuman.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://planen-online-shop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mks-autoteile.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tictex.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tebo.ag",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shop.meta-online.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://decocity-muenchen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hobbybaecker.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ausdruckslos.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://nutrilovers.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://equinate.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://freyerleben.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://c-g-w.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://spinnrad.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://spinnrad.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://roto-dachfenster.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://roto-frank.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://moebel-style.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://Kindermaxx.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://elten.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://passiondecor.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://smarketer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://udobaer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://Kindermaxx.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://smarketer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://passiondecor.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://passiondecor.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://klippshop.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://finvia.fo",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://mybag factory",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://mybag factory\nCall log:\n  - navigating to \"https://mybag factory\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://treppini.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://derfarbeimer.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tarif.planbnetzero-energy.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://media-dental.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://wirkaufenihrenabfall.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hofa.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shop.purway.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://shop.purway.de, https:\nCall log:\n  - navigating to \"https://shop.purway.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://shop.purway.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://shop.purway.de, https:\nCall log:\n  - navigating to \"https://shop.purway.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://bettwaesche-mit-stil.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sofein.ch",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://fain.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://swisstrin.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://pcdt.fr",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://spuelenhandel.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://campingbedarf24.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://meine-steigplatten.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://meine-steigplatten.de/\nCall log:\n  - navigating to \"https://meine-steigplatten.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://dubimoebel.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://velvet-trading.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://proofficed\u00fcsseldorf.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://xn--proofficedsseldorf-v6b.de/\nCall log:\n  - navigating to \"https://xn--proofficedsseldorf-v6b.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://treppenshop-dresden.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://stex24.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sportnahrung-kwax.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://hdwm.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hd-elektrotechnik.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://panto-agrar.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hometiger.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://etc-shop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sausewind-shop.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://freyerleben.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://shop.bauer-blue.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://passiondecor.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://protect-home.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://stex24.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schlummersack.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://pch-shop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://onlinezoo.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mouldshop.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://faber-castell.fr",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sierbach.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://khroom-sport.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://helmtrophy.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://original-seiffener-volkskunst.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://potec-gmbh.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_SSL_VERSION_OR_CIPHER_MISMATCH at https://potec-gmbh.de/\nCall log:\n  - navigating to \"https://potec-gmbh.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://monchoujewelry.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://santosgrills.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://rothsteiner.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "no",
+                "analytics": "no",
+                "preferences": "no",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://handball.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://erassential.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://buddystar.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://locus-bauunternehmen.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://chefstore.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://mentortools.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://easy-lakeballs.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://daebak.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://easy-lakeballs.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bresser.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bresser.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bresser.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ongnamo-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://launch-europe-shop.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://mail.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://meowbaby.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": "yes"
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://mbs-medizintechnik.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://holzhandel-vogt.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://systeme-software24.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://flatexdegiro.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://belanoti.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://madgon.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "no",
+                "sale_of_data": "yes"
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://ichmachkita.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://jorinde-shop.ch",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "no",
+                "analytics": "no",
+                "preferences": "no",
+                "sale_of_data": "no"
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://glueck-in-sicht.de | intermar-apartments.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"https://glueck-in-sicht.de | intermar-apartments.de\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://brekstar.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://faber-castell.fr",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sbj-sportland.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://vasenglueck.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://www.panto-heimtier.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://planville.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tymbia.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://aqua-comfort.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://shop.bauer-blue.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://bresser.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bresser.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://identmarket.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://radixweb.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://wpc-shop24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://easy-lakeballs.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://murmelkiste.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://beautylinestore.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bau-sauber.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gcfootwear.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://blo-lackiersysteme.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://daszelt.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://smatano.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://axisbits.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://esmee.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://iamcreative.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://haushaltsparadies.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://erwachsenenhotel-erzgebirge.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bresser.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://paradies-bettenshop.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "yes",
+                "analytics": "yes",
+                "preferences": "yes",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://adenauer.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tonitrus.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://drachenfels-design.de | https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: Protocol error (Page.navigate): Cannot navigate to invalid URL\nCall log:\n  - navigating to \"https://drachenfels-design.de | https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://hesselink24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://diejawue.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://der-grashuepfer-shop.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": true,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://kunstpflanze.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://hoelscher-wasserbau.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tmn-shop.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://kluth24.com",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://pcdt.fr",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://deitert.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bonebrox.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://tmn-shop.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://wpc-shop24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://nuprevento.shop",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://sofortwechsel24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://igold-Deutschland.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://igold-deutschland.de/\nCall log:\n  - navigating to \"https://igold-deutschland.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://krohne.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://monchoujewelry.de",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://azowo.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bomi-handel.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://hds-tore.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://eat-skincare.com",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://jorinde-shop.ch",
+        "is_shopify": true,
+        "consent_leaks": false,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "no",
+                "analytics": "no",
+                "preferences": "no",
+                "sale_of_data": "no"
+            },
+            "dataLayerGranted": false
+        }
+    },
+    {
+        "url": "https://absperren24.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://Lizenzdiscount.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://bsv-hausmeisterservice.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://bsv-hausmeisterservice.de/\nCall log:\n  - navigating to \"https://bsv-hausmeisterservice.de/\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://druckexperte.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://druckexperte.ch",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://vnr.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://greenhero.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://marcelpaa.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://passiondecor.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://tonis-pizzaoefen.shop",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": null,
+            "visitorConsent": null,
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://sucietto.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://schutzhuellenprofi.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://passiondecor.net",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://onlinezoo.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://ltt-versand.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://motointegrator.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://motointegrator.de, https:\nCall log:\n  - navigating to \"https://motointegrator.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://onlinezoo.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://gusti-leder.de",
+        "is_shopify": true,
+        "consent_leaks": true,
+        "details": {
+            "exists": true,
+            "marketingAllowed": false,
+            "visitorConsent": {
+                "marketing": "",
+                "analytics": "",
+                "preferences": "",
+                "sale_of_data": ""
+            },
+            "dataLayerGranted": true
+        }
+    },
+    {
+        "url": "https://Kindermaxx.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://feelgood-shop.com",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://moebel-style.de",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://fansport24.de, https:",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {},
+        "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://fansport24.de, https:\nCall log:\n  - navigating to \"https://fansport24.de, https:\", waiting until \"domcontentloaded\"\n"
+    },
+    {
+        "url": "https://klippshop.at",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    },
+    {
+        "url": "https://faber-castell.fr",
+        "is_shopify": false,
+        "consent_leaks": false,
+        "details": {}
+    }
+]
