@@ -157,7 +157,7 @@ def dashboard_overview_view(request):
         "total_conversions": "—",
         "columns": [
             "Client",
-            "Ads ID",
+            #"Ads ID",
             "Date",
             "Classic Purchase",
             "GA4 Purchase",

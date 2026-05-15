@@ -2,19 +2,29 @@
 {% load dashboard_extras %}
 {% block content %}
 <style>
-/* 1. Układ główny i kontenery */
+/* 1. Układ główny i kontenery - PEŁNA SZEROKOŚĆ */
 .container-main, .container-fluid {
-    width: 98% !important; /* Zwiększyłem szerokość, żeby 10 kolumn weszło obok siebie */
-    max-width: 1800px !important;
-    margin: 0 auto !important;
-    padding: 20px 0;
+    width: 70% !important;      /* Zajmij 100% dostępnego miejsca */
+    max-width: 70% !important;  /* Usuń jakiekolwiek ograniczenie (nawet te 90%) */
+    margin: 0 !important;        /* Skasuj marginesy boczne */
+    padding: 20px 10px !important; 
 }
 
+/* Dodatkowo, jeśli Twoja tabela siedzi wewnątrz klasy .card lub .main-dashboard-wrapper */
 .main-dashboard-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.card {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+body, #main-content, .wrapper, .container-fluid {
+    max-width: none !important;
+    width: 100% !important;
 }
 
 /* 2. Kafle statystyk na górze */

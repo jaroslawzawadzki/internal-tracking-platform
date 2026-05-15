@@ -185,7 +185,7 @@ def load_monitoring_rows(days=30):# 1. Zmieniamy argument z monitoring_date na d
     rows.append({
         "Client": names_map.get(pid, pid),  # Tutaj naprawiamy nazwę!
         "Ads ID": pid,
-        "Date": display_date,
+        "Date": f"{start_date.strftime('%d.%m')} - {today.strftime('%d.%m')}",
         "Classic Purchase": ("✅" if classic_ok else "❌") + f" ({int(classic_val)})",
         "GA4 Purchase": ("✅" if ga4_val > 0 else "❌") + f" ({int(ga4_val)})",
         "SST Purchase": ("✅" if sst_ok else "❌") + f" ({int(sst_val)})",
@@ -400,7 +400,7 @@ def load_overview_rows(start_date, end_date):
         rows.append({
             "Client": client_name or "UNKNOWN",
             "Ads ID": ads_id,
-            "Date": f"{start_date} – {end_date}",
+            "Date": f"{start_date.strftime('%d.%m')} - {end_date.strftime('%d.%m')}",
             "Classic Purchase": diagnose_value(classic_value, has_ads_data, "Classic"),
             "GA4 Purchase": diagnose_value(ga4_value, has_ads_data, "GA4"),
             "SST Purchase": diagnose_value(sst_value, has_ads_data, "SST"),
