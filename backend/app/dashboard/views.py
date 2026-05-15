@@ -133,18 +133,23 @@ def dashboard_view(request):
 
 
 def dashboard_overview_view(request):
+    # 1. Pobieramy liczbę dni z URL (domyślnie 14, jeśli nic nie kliknięto)
+    days = int(request.GET.get('days', 14)) 
+    
+    # 2. Obliczamy daty na podstawie wyboru użytkownika
     today = timezone.now().date()
-    start_date = date(today.year, 1, 1)
     end_date = today - timedelta(days=1)
+    start_date = today - timedelta(days=days)
 
-    # 1. Pobieramy "paczkę" danych zamiast samej listy
+    # 3. Przekazujemy te daty do funkcji ładującej dane
     data_bundle = load_overview_rows(start_date, end_date)
-
-    # 2. Rozdzielamy to na wiersze do tabeli i statystyki do kafli
+    
     rows = data_bundle["rows"]
     stats = data_bundle["stats"]
+    
 
     context = {
+
         "title": "SST Dashboard – Overview (LIVE)",
         "subtitle": f"{start_date} – {end_date} • Classic vs GA4 vs SST",
         "last_refresh": f"{start_date} – {end_date}",
@@ -153,21 +158,15 @@ def dashboard_overview_view(request):
         "active_clients": stats["total_clients"],
         "health_score": stats["health_score"],
         "stape_status": stats["stape_status"],
-        
-        "total_conversions": "—",
+        "days_selected": days, # Przekazujemy to, żeby frontend wiedział, który przycisk podświetlić
+        "start_date": start_date,
+        "end_date": end_date,
         "columns": [
-            "Client",
-            #"Ads ID",
-            "Date",
-            "Classic Purchase",
-            "GA4 Purchase",
-            "SST Purchase",
-            "FAST",
-            "STAPE Purchase",
-            "STAPE Events",
-            "Status",
+            "Client", "Date", "Classic Purchase", "GA4 Purchase", 
+            "SST Purchase", "FAST", "STAPE Purchase", "STAPE Events", "Status",
         ],
-        "rows": rows,  # Tabela znowu dostaje swoją listę
+        "rows": rows,
+        "stats": stats,
     }
     return render(request, "dashboard/dashboard.html", context)
 

@@ -82,20 +82,32 @@ class Command(BaseCommand):
         processed_containers = 0
 
         # 5) Iteracja po WSZYSTKICH kontenerach
+        # ... (początek skryptu bez zmian) ...
+
         for cont in parsed:
             processed_containers += 1
-            print("PROCESSING CONTAINER:", cont)
-
             container_id = cont["container_id"]
+            ads_id = cont["ads_id"]
 
+            # 1. Sprawdź ostatnią datę w bazie dla tego ads_id
+            last_entry = SstMetric.objects.filter(property_id=ads_id).order_by('-report_date').first()
+            
             usage_data = stape_get(f"/containers/{container_id}/analytics/clients")
             analytics_body = usage_data.get("body", [])
 
-            # BACKFILL: ostatnie 14 dni
-            analytics_body = analytics_body[:14]
+            # 2. Filtruj dane z API - bierz tylko te, których nie ma w bazie
+            if last_entry:
+                # Bierzemy tylko te dni, które są nowsze niż nasza ostatnia data
+                # Możesz dodać margines 1 dnia (last_entry.report_date), żeby zaktualizować "dzisiejsze" dane
+                analytics_body = [day for day in analytics_body if datetime.utcfromtimestamp(day.get("date")).date() >= last_entry.report_date]
+            else:
+                # Jeśli baza jest pusta dla tego klienta, bierzemy np. ostatnie 30 dni jako backfill
+                analytics_body = analytics_body[:30]
 
-            print("ANALYTICS DAYS COUNT:", len(analytics_body))
-            if not analytics_body:
+            print(f"PROCESSING {len(analytics_body)} NEW/UPDATED DAYS FOR {cont['client_name']}")
+
+            for day in analytics_body:
+        # ... (reszta pętli zapisu bez zmian, update_or_create zajmie się resztą) ...
                 print("NO ANALYTICS FOR THIS CONTAINER")
                 continue
 
