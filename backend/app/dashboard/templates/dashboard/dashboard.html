@@ -411,10 +411,20 @@ tbody tr td:last-child {
                     <canvas id="modalChart"></canvas>
                 </div>
                 
+                
                 <div id="modalControls" style="background: #f8f9fe; padding: 20px; border-radius: 12px;">
                     <h4 style="margin-top: 0;">Opcje widoku</h4>
+
+                    <button id="btn-toggle-mapping" type="button"
+                        style="width:100%; margin:10px 0 12px; padding:10px; border:none; border-radius:10px; font-weight:800; cursor:pointer; background:#111827; color:white;">
+                        ⚙️ Konfiguracja overview (przypięcia)
+                    </button>
+
+                    <div id="modal-mapping-panel" style="display:none; margin-bottom: 14px;"></div>
+
                     <div id="modal-conversions-list"></div>
                 </div>
+
             </div>
             
             <div id="modal-table-results" style="margin-top: 30px;">
@@ -427,6 +437,7 @@ tbody tr td:last-child {
       let conversionsChart = null;
       let sumsRequestId = 0;
       let currentViewMode = 'count'; 
+      let modalMode = "analysis"; // "analysis" albo "config"
       
 
       // --- 1. OBSŁUGA MODALA ---
@@ -651,9 +662,186 @@ tbody tr td:last-child {
                 renderChart(selected, sumsMap);
             });
         }
+        function refreshMappingPreview(data) {
+            const range = getDateRange();
+            if (!range) return;
+
+            const sel = data.selected || {};
+            const names = [];
+
+            if (sel.classic) names.push(sel.classic);
+            if (sel.ga4) names.push(sel.ga4);
+            if (sel.sst) names.push(sel.sst);
+            if (sel.fast) names.push(sel.fast);
+
+            const container = document.getElementById("modal-table-results");
+            if (!container) return;
+
+            if (names.length === 0) {
+                container.innerHTML = "<p class='muted'>Brak przypięć — ustaw dropdowny i kliknij Zapisz.</p>";
+                return;
+            }
+
+            // w konfiguracji wybieramy z ADS (bo dropdowny są z ADS)
+            const items = names.map(n => ({ name: n, source: "ADS" }));
+
+            fetch(`/dashboard/client/${data.ads_id}/revenue-analysis/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                start_date: range.start,
+                end_date: range.end,
+                items
+                }),
+            })
+            .then(r => r.json())
+            .then(resp => {
+                const sumsMap = {};
+                const rows = resp.data || resp.results || [];
+
+                rows.forEach(r => {
+                const key = `${r.name}|${r.source}`.trim();
+                sumsMap[key] = {
+                    count: parseFloat(r.quantity || r.sum || 0),
+                    value: parseFloat(r.value || r.revenue || 0)
+                };
+                });
+
+                // Renderujemy tabelę dla mappingu (dokładnie 4 pozycje)
+                const previewConversions = items.map(it => ({
+                name: it.name,
+                source: it.source,
+                type: "MAPPED"
+                }));
+
+                renderResultsTable(previewConversions, sumsMap);
+            });
+        }
+
+
+
+       function escapeHtml(s) {
+            return String(s)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+            }
+
+            function renderMappingPanel(data) {
+            const panel = document.getElementById("modal-mapping-panel");
+            if (!panel) return;
+
+            const sel = data.selected || {};
+
+            // MVP: pokaż wszystkie konwersje z listy (Excel) – BEZ filtrowania po type
+            // i najlepiej tylko ADS, bo overview liczy Classic/GA4/SST/FAST z ads_base.
+            const items = (data.conversions || [])
+                .filter(c => c.source === "ADS")
+                .map(c => c.name)
+                .sort((a, b) => a.localeCompare(b));
+
+            const makeOptions = (selectedValue) => {
+                let o = `<option value="">(AUTO — jak teraz)</option>`;
+                items.forEach(name => {
+                const isSel = (selectedValue && name === selectedValue) ? "selected" : "";
+                o += `<option value="${escapeHtml(name)}" ${isSel}>${escapeHtml(name)}</option>`;
+                });
+                return o;
+            };
+
+            panel.innerHTML = `
+                <div style="padding: 12px; background:#fff; border:1px solid #e9ecef; border-radius: 12px;">
+                <div style="font-size:0.7rem; font-weight:800; color:#8898aa; text-transform:uppercase; margin-bottom:8px;">
+                    Co pokazujemy na overview (pierwsza strona)
+                </div>
+
+                <label style="display:block; font-size:0.7rem; color:#8898aa; font-weight:700; margin-top:10px;">CLASSIC</label>
+                <select id="map-classic" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;">
+                    ${makeOptions(sel.classic)}
+                </select>
+
+                <label style="display:block; font-size:0.7rem; color:#8898aa; font-weight:700; margin-top:10px;">GA4</label>
+                <select id="map-ga4" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;">
+                    ${makeOptions(sel.ga4)}
+                </select>
+
+                <label style="display:block; font-size:0.7rem; color:#8898aa; font-weight:700; margin-top:10px;">SST</label>
+                <select id="map-sst" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;">
+                    ${makeOptions(sel.sst)}
+                </select>
+
+                <label style="display:block; font-size:0.7rem; color:#8898aa; font-weight:700; margin-top:10px;">FAST</label>
+                <select id="map-fast" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;">
+                    ${makeOptions(sel.fast)}
+                </select>
+
+                <button type="button" id="btn-save-mapping"
+                    style="margin-top:12px; width:100%; padding:10px; border:none; border-radius:10px; font-weight:800; cursor:pointer; background:#5e72e4; color:white;">
+                    Zapisz przypięcie
+                </button>
+
+                <div id="mapping-status" style="margin-top:8px; font-size:0.7rem; color:#8898aa;"></div>
+                </div>
+            `;
+
+            const btn = document.getElementById("btn-save-mapping");
+            if (btn) {
+                btn.onclick = async () => {
+                const status = document.getElementById("mapping-status");
+                if (status) status.textContent = "Zapisywanie...";
+
+                const payload = { selected: {
+                    classic: document.getElementById("map-classic")?.value || "",
+                    ga4:     document.getElementById("map-ga4")?.value || "",
+                    sst:     document.getElementById("map-sst")?.value || "",
+                    fast:    document.getElementById("map-fast")?.value || "",
+                }};
+
+                Object.keys(payload.selected).forEach(k => {
+                    if (!payload.selected[k]) delete payload.selected[k];
+                });
+
+                const res = await fetch(`/dashboard/client/${data.ads_id}/monitoring-mapping/save/`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                    });
+
+                    // próbujemy odebrać JSON (bez crasha)
+                    let out = null;
+                    try {
+                    out = await res.json();
+                    } catch (e) {
+                    out = null;
+                    }
+
+                    // ❌ jeśli coś poszło nie tak
+                    if (!res.ok || !out || out.ok !== true) {
+                    if (status) status.textContent = "❌ Błąd zapisu";
+                    return;
+                    }
+
+                    // ✅ sukces
+                    if (status) status.textContent = "✅ Zapisano";
+
+                    // WAŻNE: aktualizujemy lokalnie dane
+                    data.selected = out.selected || payload.selected || {};
+
+                    // opcjonalnie: odśwież preview tabeli (jeśli masz tę funkcję)
+                    if (typeof refreshMappingPreview === "function") {
+                    refreshMappingPreview(data);
+                    }
+
+                }
+            }
+        }
+
+        
     
     
-      function loadClientConversions(adsId) {
+        function loadClientConversions(adsId) {
             fetch(`/dashboard/client/${adsId}/conversions/`)
                 .then(r => r.json())
                 .then(data => {
@@ -661,6 +849,46 @@ tbody tr td:last-child {
                     
                     // 1. Czyścimy kontener
                     listDiv.innerHTML = ""; 
+                     // render konfiguracji do osobnego panelu
+                    renderMappingPanel(data);
+
+                    // --- TOGGLE: konfiguracja vs widok checkboxów ---
+                    const toggleBtn = document.getElementById("btn-toggle-mapping");
+                    const mappingPanel = document.getElementById("modal-mapping-panel");
+                    const conversionsList = document.getElementById("modal-conversions-list");
+
+                    if (toggleBtn && mappingPanel && conversionsList) {
+                    // na start: konfiguracja schowana, lista widoczna
+                    mappingPanel.style.display = "none";
+                    conversionsList.style.display = "block";
+
+                    toggleBtn.onclick = () => {
+                        const showMapping = (mappingPanel.style.display === "none" || mappingPanel.style.display === "");
+
+                        mappingPanel.style.display = showMapping ? "block" : "none";
+                        conversionsList.style.display = showMapping ? "none" : "block";
+                        // CHOWAMY SŁUPKI (WYKRES) w trybie konfiguracji
+                        const chartWrap = document.querySelector(".chart-container");
+                        if (chartWrap) chartWrap.style.display = showMapping ? "none" : "block";
+
+                        // TABELA NA DOLE ZOSTAJE (zawsze widoczna)
+                        const resultsWrap = document.getElementById("modal-table-results");
+                        if (resultsWrap) resultsWrap.style.display = "block";
+
+
+                        toggleBtn.textContent = showMapping
+                        ? "← Wróć do widoku (checkboxy)"
+                        : "⚙️ Konfiguracja overview (przypięcia)";
+                        
+                        if (showMapping) {
+                        refreshMappingPreview(data);
+                        } else {
+                        refreshSums(data);
+                        }
+
+                    };
+                    }
+                      
 
                     // 2. Inteligenta kategoryzacja
                     const groups = {};
@@ -688,14 +916,14 @@ tbody tr td:last-child {
                                 background:${currentViewMode === 'count' ? 'white' : 'transparent'}; 
                                 color:${currentViewMode === 'count' ? '#5e72e4' : '#8898aa'}; 
                                 box-shadow:${currentViewMode === 'count' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'};">
-                                ILOŚĆ
+                                Amount
                             </button>
                             <button type="button" id="btn-mode-value" 
                                 style="flex:1; padding:8px; border:none; border-radius:10px; cursor:pointer; font-weight:bold; font-size:0.7rem; transition: 0.3s; 
                                 background:${currentViewMode === 'value' ? 'white' : 'transparent'}; 
                                 color:${currentViewMode === 'value' ? '#2dce89' : '#8898aa'}; 
                                 box-shadow:${currentViewMode === 'value' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'};">
-                                WARTOŚĆ (€)
+                                Value (€)
                             </button>
                         </div>
 
@@ -705,7 +933,8 @@ tbody tr td:last-child {
                             <option value="30" selected>Ostatnie 30 dni</option>
                             <option value="90">Ostatnie 90 dni</option>
                         </select>`;
-
+                    
+                        
                     // Budujemy grupy details/summary
                     for (const [category, items] of Object.entries(groups)) {
                         const isOpen = (category === 'PURCHASE') ? 'open' : '';
@@ -737,6 +966,8 @@ tbody tr td:last-child {
                     html += `</form>`;
                     
                     listDiv.innerHTML = html;
+                   
+
 
                     // 4. Inicjalne odświeżenie danych
                     refreshSums(data);
@@ -819,4 +1050,4 @@ tbody tr td:last-child {
             }
         }
 </script>
-{% endblock %}u
+{% endblock %}

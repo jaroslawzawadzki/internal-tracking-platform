@@ -12,11 +12,11 @@ from django.db.models import Sum
 from django.http import JsonResponse
 from datetime import date, timedelta
 from django.utils import timezone
-from dashboard.models import SstMetric
+from dashboard.models import SstMetric,MonitoringViewConfig
 from dashboard.data_sources import PURCHASE_REGEX
 import json
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST,require_http_methods
 from asgiref.sync import sync_to_async
 from .scanner import test_scan # To zaimportuje funkcję z pliku scanner.py
 from django.template.loader import render_to_string
@@ -265,12 +265,71 @@ def client_conversions_view(request, ads_id):
             "source": source,   # ✅ TO JEST NOWE I WAŻNE
         })
 
+    cfg = MonitoringViewConfig.objects.filter(property_id=str(ads_id)).only("config").first()
+    selected = {}
+    if cfg and cfg.config and isinstance(cfg.config, dict):
+         selected = cfg.config.get("selected") or {}
+
+    return JsonResponse({
+         "ads_id": ads_id,
+         "conversions": conversions,
+        "selected": selected,   # ✅ NOWE
+    })
+
+def client_monitoring_mapping_get(request, ads_id):
+    obj = MonitoringViewConfig.objects.filter(property_id=str(ads_id)).only("config").first()
+    config = obj.config if obj and obj.config else {}
+    selected = config.get("selected", {}) if isinstance(config, dict) else {}
+
     return JsonResponse({
         "ads_id": ads_id,
-        "conversions": conversions
+        "selected": selected,
+        "config": config,
     })
+
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def client_monitoring_mapping_save(request, ads_id):
+    """
+    Body JSON:
+    {
+      "selected": {
+        "classic": "Some Conversion",
+        "ga4": "Some Conversion",
+        "sst": "Some Conversion",
+        "fast": "Some Conversion"
+      }
+    }
+    """
+    try:
+        payload = json.loads(request.body.decode("utf-8") or "{}")
+    except Exception:
+        return JsonResponse({"ok": False, "error": "Invalid JSON"}, status=400)
+
+    selected = payload.get("selected") or {}
+
+    # Minimalny sanity-check: tylko dozwolone klucze + string values
+    allowed = {"classic", "ga4", "sst", "fast"}
+    cleaned = {}
+    for k, v in selected.items():
+        if k in allowed and isinstance(v, str):
+            vv = v.strip()
+            if vv:
+                cleaned[k] = vv
+
+    obj, _ = MonitoringViewConfig.objects.update_or_create(
+        property_id=str(ads_id),
+        defaults={"config": {"selected": cleaned}},
+    )
+
+    return JsonResponse({"ok": True, "ads_id": ads_id, "selected": obj.config.get("selected", {})})
+
+
 @csrf_exempt
 @require_POST
+
 
 def client_revenue_analysis_view(request, ads_id):
     payload = json.loads(request.body.decode("utf-8"))

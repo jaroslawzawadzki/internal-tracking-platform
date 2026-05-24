@@ -62,3 +62,14 @@ class AuditReport(models.Model):
 
     def __str__(self):
         return f"Raport {self.url} - {self.timestamp}"
+    
+
+
+
+class MonitoringViewConfig(models.Model):
+    property_id = models.CharField(max_length=64, unique=True, db_index=True)
+    config = models.JSONField(default=dict, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"MonitoringViewConfig({self.property_id})"

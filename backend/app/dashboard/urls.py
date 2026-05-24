@@ -34,6 +34,8 @@ urlpatterns = [
     path('mass-audit/', run_mass_audit_view, name='run_mass_audit'),
     path('refresh-data/', views.refresh_data_view, name='refresh_data'),
     path('client/<str:ads_id>/revenue-analysis/', views.client_revenue_analysis_view, name='client_revenue_analysis'),
+    path("client/<str:ads_id>/monitoring-mapping/save/", views.client_monitoring_mapping_save, name="client_monitoring_mapping_save"),
+    path("client/<str:ads_id>/monitoring-mapping/", views.client_monitoring_mapping_get, name="client_monitoring_mapping_get"),
     path("api/stape-sync/", trigger_stape_ingest, name="stape_sync"),
     
 ]
