@@ -16,6 +16,24 @@
     max-width: 100% !important;
 }
 
+
+.health-pill{
+  display:inline-block;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  margin-right:4px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.22);
+}
+
+.health-pill.green  { background:#22C55E; }
+.health-pill.yellow { background:#F59E0B; } /* amber – dużo lepszy niż "yellow" */
+.health-pill.red    { background:#EF4444; }
+.health-pill.gray   { background:#94A3B8; }
+
+
+
+
 .card {
     width: 100% !important;
     margin-left: 0 !important;
@@ -301,7 +319,12 @@ tbody tr td:last-child {
     </div>
 
     <div class="glass-stat-card controls-card">
-        <button class="btn-modern-refresh">Odśwież dane z BigQuery</button>
+        <a href="{% url 'refresh_data' %}" class="btn-modern-refresh" style="text-decoration: none; display: inline-block; text-align: center; width: 100%; box-sizing: border-box;">
+        🔄 Odśwież dane z BigQuery
+        </a>
+        <button class="btn-modern-refresh" onclick="runStapeSync()">
+            ⚡ Odśwież STAPE
+        </button>
         <div class="range-pill-group" style="margin-top: 0; width: 100%;">
             <a href="?days=7" class="range-pill {% if days_selected == 7 %}active{% endif %}">7d</a>
             <a href="?days=14" class="range-pill {% if days_selected == 14 %}active{% endif %}">14d</a>
@@ -331,8 +354,8 @@ tbody tr td:last-child {
                         {% endfor %}
                             <th class="col-health" style="padding: 12px; vertical-align: middle;">
                                 <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: center;">
-                                    <span style="color: #8898aa; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; line-height: 1.2;">Health</span>
-                                    <span style="color: #8898aa; font-size: 0.55rem; opacity: 0.7; font-weight: 400; line-height: 1.2;">[7d/14d/30d]</span>
+                                    <span style="font-size: 0.65rem; font-weight: 700; text-transform: uppercase; line-height: 1.2;">Health</span>
+                                    <span style="font-size: 0.55rem; opacity: 0.7; font-weight: 400; line-height: 1.2;">[7d/14d/30d]</span>
                                 </div>
                             </th>
                         <th class="col-alert" style="padding: 12px; color: #8898aa; font-size: 0.65rem;">Alert</th>
@@ -356,9 +379,9 @@ tbody tr td:last-child {
                         {% endfor %}
                         
                         <td>
-                            <span style="color: {{ row.Health_7d_color }}">●</span>
-                            <span style="color: {{ row.Health_14d_color }}">●</span>
-                            <span style="color: {{ row.Health_30d_color }}">●</span>
+                            <span class="health-pill {{ row.Health_7d_color }}"></span>
+                            <span class="health-pill {{ row.Health_14d_color }}"></span>
+                            <span class="health-pill {{ row.Health_30d_color }}"></span>
                         </td>
                         <td class="col-alert">
                             {{ row.Alert_Message }}
@@ -403,6 +426,8 @@ tbody tr td:last-child {
     <script>
       let conversionsChart = null;
       let sumsRequestId = 0;
+      let currentViewMode = 'count'; 
+      
 
       // --- 1. OBSŁUGA MODALA ---
       function openClientModal(adsId, clientName) {
@@ -468,90 +493,183 @@ tbody tr td:last-child {
           }).filter(Boolean);
       }
 
-      function renderResultsTable(conversions, sumsMap) {
-        let html = `<table style="width:100%; margin-top:10px; border-collapse: collapse;">
-                    <thead><tr style="border-bottom: 2px solid #f1f3f5;">
-                    <th style="text-align:left; padding: 10px;">Konwersja</th>
-                    <th style="text-align:left; padding: 10px;">Typ</th>
-                    <th style="text-align:right; padding: 10px;">Suma</th>
-                    </tr></thead><tbody>`;
-        conversions.forEach((c) => {
-          const key = c.name + "|" + c.source;
-          const sum = sumsMap && sumsMap[key] != null ? sumsMap[key] : 0;
-          html += `<tr style="border-bottom: 1px solid #f8f9fe;">
-                   <td style="padding: 10px;">${c.name}</td>
-                   <td style="padding: 10px;">${c.type}</td>
-                   <td style="padding: 10px; text-align:right;"><strong>${sum}</strong></td></tr>`;
-        });
-        html += `</tbody></table>`;
-        // WRZUCAMY DO MODALA
-        document.getElementById("modal-table-results").innerHTML = html;
-      }
+     function renderResultsTable(conversions, sumsMap) {
+            let html = `<table style="width:100%; margin-top:10px; border-collapse: collapse;">
+                        <thead><tr style="border-bottom: 2px solid #f1f3f5;">
+                        <th style="text-align:left; padding: 10px; font-size:0.75rem; color:#8898aa;">Konwersja</th>
+                        <th style="text-align:left; padding: 10px; font-size:0.75rem; color:#8898aa;">Typ</th>
+                        <th style="text-align:right; padding: 10px; font-size:0.75rem; color:#8898aa;">Ilość</th>
+                        <th style="text-align:right; padding: 10px; font-size:0.75rem; color:#8898aa;">Value</th>
+                        </tr></thead><tbody>`;
+
+            conversions.forEach((c) => {
+                const key = c.name + "|" + c.source;
+                
+                // 1. BEZPIECZNIK: Pobieramy obiekt danych lub tworzymy pusty
+                const data = (sumsMap && sumsMap[key]) ? sumsMap[key] : { count: 0, value: 0 };
+                
+                // 2. NADPISANIE: Upewniamy się, że operujemy na liczbach (konwersja na Number i obsługa null/undefined)
+                const countSafe = Number(data.count || 0);
+                const valueSafe = Number(data.value || 0);
+                
+                // 3. FORMATOWANIE: Używamy valueSafe
+                const formattedValue = new Intl.NumberFormat('de-DE', { 
+                    style: 'currency', 
+                    currency: 'EUR' 
+                }).format(valueSafe);
+
+                // 3. LOGIKA ŹRÓDŁA: Żebyś wiedział czy to STAPE (SST) czy ADS
+                const sourceLabel = c.source === 'STAPE' 
+                    ? '<span style="color:#5e72e4; font-weight:bold;">SST</span>' 
+                    : '<span style="color:#adb5bd;">ADS</span>';
+
+                html += `<tr style="border-bottom: 1px solid #f8f9fe;">
+                            <td style="padding: 10px; font-size:0.85rem;">
+                                <div style="font-weight:600;">${c.name}</div>
+                                <div style="font-size:0.65rem; text-transform:uppercase; margin-top:2px;">Źródło: ${sourceLabel}</div>
+                            </td>
+                            <td style="padding: 10px; font-size:0.8rem; color:#adb5bd;">${c.type || 'N/A'}</td>
+                            <td style="padding: 10px; text-align:right;"><strong>${countSafe.toFixed(0)}</strong></td>
+                            <td style="padding: 10px; text-align:right; color:#2dce89;"><strong>${formattedValue}</strong></td>
+                        </tr>`;
+            });
+
+            html += `</tbody></table>`;
+            
+            const container = document.getElementById("modal-table-results");
+            if (container) {
+                container.innerHTML = html;
+            }
+        }
 
       function renderChart(conversions, sumsMap) {
-        const ctx = document.getElementById("modalChart"); // CELUJEMY W MODAL
-        if (!ctx) return;
-        const labels = conversions.map((c) => c.name);
-        const dataValues = conversions.map((c) => {
-          const key = c.name + "|" + c.source;
-          return sumsMap[key] ?? 0;
-        });
-        if (conversionsChart) conversionsChart.destroy();
-        conversionsChart = new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels: labels,
-            datasets: [{ label: "Konwersje", data: dataValues, backgroundColor: "#5e72e4", borderRadius: 5 }],
-          },
-          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-      }
+            const ctx = document.getElementById("modalChart");
+            if (!ctx) return;
 
+            // labels muszą bazować na przekazanej tablicy 'conversions'
+            const labels = conversions.map(c => {
+                const prefix = c.source === 'STAPE' ? '[SST] ' : '[ADS] ';
+                return prefix + c.name;
+            });
+
+            const dataValues = conversions.map((c) => {
+                const key = `${c.name}|${c.source}`.trim();
+                const data = sumsMap[key] || { count: 0, value: 0 };
+                return currentViewMode === 'value' ? data.value : data.count;
+            });
+
+            if (conversionsChart) conversionsChart.destroy();
+
+            conversionsChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: currentViewMode === 'value' ? "Wartość (€)" : "Ilość konwersji",
+                        data: dataValues,
+                        backgroundColor: currentViewMode === 'value' ? "#2dce89" : "#5e72e4",
+                        borderRadius: 5
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let val = context.raw;
+                                    if (currentViewMode === 'value') {
+                                        return "Wartość: " + new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
+                                    }
+                                    return "Ilość: " + val;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (currentViewMode === 'value') {
+                                        return value.toLocaleString('de-DE') + ' €';
+                                    }
+                                    return value;
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { size: 10 } // Mniejsza czcionka, żeby [SST] się zmieściło
+                            }
+                        }
+                    }
+                }
+            });
+        }
       function refreshSums(data) {
-        const range = getDateRange();
-        const selected = getSelectedConversions(data);
-        if (!range) return;
-        const infoDiv = document.getElementById("conversion-results-info");
-        const myId = ++sumsRequestId;
+            const range = getDateRange();
+            const selected = getSelectedConversions(data);
+            if (!range || selected.length === 0) return;
 
-        fetch(`/dashboard/client/${data.ads_id}/sums/`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            start_date: range.start,
-            end_date: range.end,
-            items: selected.map((c) => ({ name: c.name, source: c.source })),
-          }),
-        })
-        .then(r => r.json())
-        .then(resp => {
-            if (myId !== sumsRequestId) return;
-            const sumsMap = {};
-            resp.results.forEach(r => sumsMap[r.name + "|" + r.source] = r.sum);
-            renderResultsTable(selected, sumsMap);
-            renderChart(selected, sumsMap);
-        });
-      }
+            // 1. ZAWSZE używamy widoku z przychodami, bo on zwraca obie wartości
+            const endpoint = `/dashboard/client/${data.ads_id}/revenue-analysis/`;
+            const myId = ++sumsRequestId;
 
+            fetch(endpoint, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    start_date: range.start,
+                    end_date: range.end,
+                    items: selected.map((c) => ({ name: c.name, source: c.source })),
+                }),
+            })
+            .then(r => r.json())
+            .then(resp => {
+                if (myId !== sumsRequestId) return;
+                
+                const sumsMap = {};
+                // Sprawdzamy klucz 'data' bo tak zwraca Twój nowy widok revenue-analysis
+                const items = resp.data || resp.results || [];
+                
+                items.forEach(r => {
+                    const key = `${r.name}|${r.source}`.trim();
+                    sumsMap[key] = {
+                        // Mapujemy dokładnie to co widzieliśmy w konsoli:
+                        count: parseFloat(r.quantity || r.sum || 0),
+                        value: parseFloat(r.value || r.revenue || 0)
+                    };
+                });
+
+                console.log("FINALNA MAPA DO TABELI:", sumsMap);
+                
+                // 2. Renderujemy tabelę i wykres korzystając z tego samego sumsMap
+                renderResultsTable(selected, sumsMap);
+                renderChart(selected, sumsMap);
+            });
+        }
+    
+    
       function loadClientConversions(adsId) {
-          fetch(`/dashboard/client/${adsId}/conversions/`)
-              .then(r => r.json())
-              .then(data => {
-                  const listDiv = document.getElementById("modal-conversions-list");
-                  
-                  // --- KLUCZ: CZYŚCIMY KONTENER PRZED BUDOWANIEM ---
-                  listDiv.innerHTML = ""; 
+            fetch(`/dashboard/client/${adsId}/conversions/`)
+                .then(r => r.json())
+                .then(data => {
+                    const listDiv = document.getElementById("modal-conversions-list");
+                    
+                    // 1. Czyścimy kontener
+                    listDiv.innerHTML = ""; 
 
-                  // Inteligenta kategoryzacja
-                  const groups = {};
-                 data.conversions.forEach(c => {
+                    // 2. Inteligenta kategoryzacja
+                    const groups = {};
+                    data.conversions.forEach(c => {
                         const n = c.name.toLowerCase();
-                        const isPurchaseName = n.includes('purchase') || n.includes('bestellung') || n.includes('kauf') || n.includes('sale');
+                        const isPurchaseName = n.includes('purchase') || n.includes('bestellung') || n.includes('kauf') || n.includes('sale') || n.includes('transaction');
                         
-                        // Wymuszamy kategorię PURCHASE, jeśli nazwa pasuje (nawet jeśli backend mówi inaczej)
                         let cat = isPurchaseName ? 'PURCHASE' : (c.category || 'OTHER');
 
-                        // Uproszczona reszta kategorii
                         if (cat === 'OTHER') {
                             if (n.includes('cart') || n.includes('koszyk')) cat = 'ADD_TO_CART';
                             else if (n.includes('checkout')) cat = 'CHECKOUT';
@@ -562,78 +680,97 @@ tbody tr td:last-child {
                         groups[cat].push(c);
                     });
 
-                  // Tworzymy formularz raz
-                  let html = `<form id="conversions-form">
-                      <label style="font-size:0.75rem; color:#8898aa; font-weight:bold;">ZAKRES CZASU:</label>
-                      <select id="date-preset" style="width:100%; padding:8px; border-radius:8px; margin-bottom:20px; border:1px solid #ddd; font-weight:bold;">
-                          <option value="7">Ostatnie 7 dni</option>
-                          <option value="30" selected>Ostatnie 30 dni</option>
-                          <option value="90">Ostatnie 90 dni</option>
-                      </select>`;
+                    // 3. Budujemy HTML Sidebar z przełącznikiem trybu
+                    let html = `<form id="conversions-form">
+                        <div style="margin-bottom: 20px; display: flex; background: #f4f5f7; border-radius: 12px; padding: 4px; border: 1px solid #e9ecef;">
+                            <button type="button" id="btn-mode-count" 
+                                style="flex:1; padding:8px; border:none; border-radius:10px; cursor:pointer; font-weight:bold; font-size:0.7rem; transition: 0.3s; 
+                                background:${currentViewMode === 'count' ? 'white' : 'transparent'}; 
+                                color:${currentViewMode === 'count' ? '#5e72e4' : '#8898aa'}; 
+                                box-shadow:${currentViewMode === 'count' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'};">
+                                ILOŚĆ
+                            </button>
+                            <button type="button" id="btn-mode-value" 
+                                style="flex:1; padding:8px; border:none; border-radius:10px; cursor:pointer; font-weight:bold; font-size:0.7rem; transition: 0.3s; 
+                                background:${currentViewMode === 'value' ? 'white' : 'transparent'}; 
+                                color:${currentViewMode === 'value' ? '#2dce89' : '#8898aa'}; 
+                                box-shadow:${currentViewMode === 'value' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'};">
+                                WARTOŚĆ (€)
+                            </button>
+                        </div>
 
-                  // Budujemy grupy
-            for (const [category, items] of Object.entries(groups)) {
-                // 'open' sprawi, że sekcja PURCHASE będzie domyślnie rozwinięta
-                const isOpen = (category === 'PURCHASE') ? 'open' : '';
+                        <label style="font-size:0.75rem; color:#8898aa; font-weight:bold;">ZAKRES CZASU:</label>
+                        <select id="date-preset" style="width:100%; padding:8px; border-radius:8px; margin-bottom:20px; border:1px solid #ddd; font-weight:bold;">
+                            <option value="7">Ostatnie 7 dni</option>
+                            <option value="30" selected>Ostatnie 30 dni</option>
+                            <option value="90">Ostatnie 90 dni</option>
+                        </select>`;
 
-                html += `
-                <details ${isOpen} style="margin-bottom: 12px; border: 1px solid #f1f3f5; border-radius: 8px; overflow: hidden;">
-                    <summary style="
-                        list-style: none; 
-                        padding: 10px 15px; 
-                        background: #f8f9fe; 
-                        cursor: pointer; 
-                        font-weight: bold; 
-                        font-size: 0.75rem; 
-                        color: #5e72e4; 
-                        display: flex; 
-                        justify-content: space-between; 
-                        align-items: center;
-                        text-transform: uppercase;">
-                        <span>${category}</span>
-                        <span style="font-size: 0.6rem; color: #a0aec0;">${items.length} konwersji ↓</span>
-                    </summary>
+                    // Budujemy grupy details/summary
+                    for (const [category, items] of Object.entries(groups)) {
+                        const isOpen = (category === 'PURCHASE') ? 'open' : '';
+                        html += `
+                        <details ${isOpen} style="margin-bottom: 12px; border: 1px solid #f1f3f5; border-radius: 8px; overflow: hidden;">
+                            <summary style="list-style:none; padding:10px 15px; background:#f8f9fe; cursor:pointer; font-weight:bold; font-size:0.75rem; color:#5e72e4; display:flex; justify-content:space-between; align-items:center;">
+                                <span>${category}</span>
+                                <span style="font-size: 0.6rem; color: #a0aec0;">${items.length} konwersji ↓</span>
+                            </summary>
+                            <div style="padding: 12px 15px; background: white;">`;
+                        
+                        items.forEach(c => {
+                            const nameLower = c.name.toLowerCase();
+                            const isPurch = nameLower.includes('purchase') || nameLower.includes('bestellung') || nameLower.includes('kauf') || nameLower.includes('sale') || nameLower.includes('transaction');
+                            const checked = isPurch ? "checked" : "";
+                            // Dodajemy mały badge ze źródłem
+                            const sourceLabel = c.source === 'STAPE' 
+                                ? '<span style="font-size:0.65rem; color:#5e72e4; background:#f0f2ff; padding:2px 5px; border-radius:4px; margin-left:5px;">SST</span>' 
+                                : '<span style="font-size:0.65rem; color:#8898aa; background:#f4f5f7; padding:2px 5px; border-radius:4px; margin-left:5px;">ADS</span>';
+
+                            html += `
+                                <label style="display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:0.85rem; cursor:pointer;">
+                                    <input type="checkbox" name="conversion" data-name="${c.name}" data-source="${c.source}" ${checked}>
+                                    <span style="color:#2d3748;">${c.name} ${sourceLabel}</span>
+                                </label>`;
+                        });
+                        html += `</div></details>`;
+                    }
+                    html += `</form>`;
                     
-                    <div style="padding: 12px 15px; background: white;">`;
-                
-               items.forEach(c => {
-                    const nameLower = c.name.toLowerCase();
-                    
-                    // Definiujemy CO CHCEMY widzieć na starcie
-                    const isActuallyPurchase = nameLower.includes('purchase') || 
-                                                nameLower.includes('bestellung') || 
-                                                nameLower.includes('kauf') || 
-                                                nameLower.includes('sale') ||
-                                                nameLower.includes('transaction');
+                    listDiv.innerHTML = html;
 
-                    // IGNORUJEMY c.purchase_like z backendu, jeśli chcemy mieć pewność czystego startu
-                    const checked = isActuallyPurchase ? "checked" : "";
+                    // 4. Inicjalne odświeżenie danych
+                    refreshSums(data);
 
-                    html += `
-                        <label style="display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:0.85rem; cursor:pointer;">
-                            <input type="checkbox" name="conversion" data-name="${c.name}" data-source="${c.source}" ${checked}>
-                            <span style="color:#2d3748;">${c.name}</span>
-                        </label>`;
+                    // 5. Listenery specyficzne dla MODALA (Poprawione)
+                    const btnCount = document.getElementById('btn-mode-count');
+                    const btnValue = document.getElementById('btn-mode-value');
+
+                    btnCount.onclick = () => {
+                        currentViewMode = 'count';
+                        // Zmieniamy style wizualnie zamiast przeładowywać cały modal
+                        btnCount.style.background = 'white'; btnCount.style.color = '#5e72e4'; btnCount.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+                        btnValue.style.background = 'transparent'; btnValue.style.color = '#8898aa'; btnValue.style.boxShadow = 'none';
+                        
+                        refreshSums(data); // Odświeża wykres i tabelę, ale zostawia checkboxy w spokoju
+                    };
+
+                    btnValue.onclick = () => {
+                        currentViewMode = 'value';
+                        // Zmieniamy style wizualnie
+                        btnValue.style.background = 'white'; btnValue.style.color = '#2dce89'; btnValue.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
+                        btnCount.style.background = 'transparent'; btnCount.style.color = '#8898aa'; btnCount.style.boxShadow = 'none';
+                        
+                        refreshSums(data); // Odświeża wykres i tabelę
+                    };
+
+                    // Reszta zostaje bez zmian
+                    document.getElementById("conversions-form").onchange = () => refreshSums(data);
+                    document.getElementById("date-preset").onchange = () => refreshSums(data);
                 });
-                
-                html += `
-                    </div>
-                </details>`;
-            }
-                  listDiv.innerHTML = html;
+        }
 
-                  // Odświeżamy sumy (wykres)
-                  refreshSums(data);
-
-                  // Listenery (dodane tylko raz do nowo stworzonych elementów)
-                  document.getElementById("conversions-form").addEventListener("change", () => refreshSums(data));
-                  document.getElementById("date-preset").addEventListener("change", () => refreshSums(data));
-              });
-      }
-
-        // Tutaj masz swoje stare funkcje (loadClientConversions, openClientModal itp.)
         
-        
+
         document.querySelectorAll('.range-pill').forEach(button => {
             button.addEventListener('click', function() {
                 const days = this.innerText.replace('d', '');
@@ -654,5 +791,32 @@ tbody tr td:last-child {
             }
         });
 
+        
+       
     </script>
-{% endblock %}
+    <script>
+     async function runStapeSync() {
+            try {
+                const btn = event.target;
+                btn.innerText = "⏳ Syncing...";
+                btn.disabled = true;
+
+                const res = await fetch("/dashboard/api/stape-sync/");
+                const data = await res.json();
+
+                console.log(data);
+
+                btn.innerText = "✅ STAPE synced";
+
+                // opcjonalnie po 2s wróć do default
+                setTimeout(() => {
+                    btn.innerText = "⚡ Odśwież STAPE";
+                    btn.disabled = false;
+                }, 2000);
+
+            } catch (e) {
+                alert("Błąd STAPE ingest");
+            }
+        }
+</script>
+{% endblock %}u

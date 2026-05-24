@@ -166,3 +166,69 @@ class Command(BaseCommand):
                 print(f"{day} → purchase: {data['purchase']}, events_total: {data['events_total']}")
 
         print("=== STAPE INGEST END ===")
+
+
+def run_stape_ingest():
+    print("=== STAPE INGEST START ===")
+
+    data = stape_get("/containers")
+    body = data.get("body", {})
+    items = body.get("items", [])
+
+    if not items:
+        return {"status": "no_data"}
+
+    sst_running = [
+        c for c in items
+        if "SST" in c.get("name", "")
+        and c.get("status", {}).get("type") == "running"
+    ]
+
+    if not sst_running:
+        return {"status": "no_sst"}
+
+    saved_rows = 0
+
+    for c in sst_running:
+        name = c.get("name", "")
+        client_name = name.split(" - ")[0].strip()
+
+        match = re.search(r"\[([0-9-\s]{6,})\]", name)
+        if not match:
+            continue
+
+        ads_id = re.sub(r"\D", "", match.group(1))
+        container_id = c.get("identifier")
+
+        usage_data = stape_get(f"/containers/{container_id}/analytics/clients")
+        analytics_body = usage_data.get("body", [])
+
+        for day in analytics_body:
+            ts = day.get("date")
+            if not ts:
+                continue
+
+            report_date = datetime.utcfromtimestamp(ts).date()
+
+            for client in day.get("clients", []):
+                for event in client.get("events", []):
+                    event_name = (event.get("name") or "").lower()
+                    count = int(event.get("count") or 0)
+
+                    if not event_name:
+                        continue
+
+                    SstMetric.objects.update_or_create(
+                        property_id=ads_id,
+                        report_date=report_date,
+                        conversion_action_name=event_name,
+                        defaults={
+                            "conversions": count,
+                        },
+                    )
+                    saved_rows += 1
+
+    return {
+        "status": "ok",
+        "saved_rows": saved_rows
+    }

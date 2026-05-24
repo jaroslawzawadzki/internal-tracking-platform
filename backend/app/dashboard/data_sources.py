@@ -50,6 +50,252 @@ def safe_int(val):
         return int(val)
     except (ValueError, TypeError):
         return 0
+    
+
+def get_health_analysis(
+    sst,
+    classic,
+    *,
+    green_threshold=0.90,   # >= 90% -> green
+    yellow_threshold=0.70,  # >= 70% -> yellow
+    min_classic_for_ratio=20,  # poniżej tego wolumenu nie ufamy ratio (za duży szum)
+    low_volume_grace=0.20,  # przy małych wolumenach dopuszczamy większą tolerancję (ratio + 0.20)
+    overdelivery_cap=1.30,  # ratio powyżej 1.30 traktuj jako "suspicious" (możliwy double count)
+):
+    """
+    Porównuje SST vs Classic w sposób odporny na:
+    - brak danych (classic=0)
+    - małe wolumeny (ratio niestabilne)
+    - sytuacje, gdzie SST > Classic (może oznaczać duplikację lub inną definicję)
+    
+    Zwraca dict:
+      color: green/yellow/red/gray
+      status: OK/WARNING/FAIL/NO_DATA/SUSPICIOUS
+      alert: opis
+      is_bad: bool (czy traktować jako problem)
+      ratio: float|None
+      sst, classic: float
+    """
+    # bezpieczne floaty
+    s = float(sst or 0)
+    c = float(classic or 0)
+
+    # 1) Brak classic: nie da się liczyć ratio
+    if c <= 0:
+        if s > 0:
+            # SST coś widzi, classic nie -> może być OK, ale raczej "brak punktu odniesienia"
+            return {
+                "color": "yellow",
+                "status": "NO_BASELINE",
+                "alert": "Classic = 0, SST > 0 (no baseline to compare).",
+                "is_bad": False,
+                "ratio": None,
+                "sst": s,
+                "classic": c,
+            }
+        return {
+            "color": "gray",
+            "status": "NO_DATA",
+            "alert": "No purchase data (Classic = 0, SST = 0).",
+            "is_bad": False,
+            "ratio": None,
+            "sst": s,
+            "classic": c,
+        }
+
+    ratio = s / c
+
+    # 2) Podejrzane: SST znacząco większe niż Classic
+    # (często double counting / różna definicja purchase / mapowanie akcji)
+    if ratio > overdelivery_cap:
+        return {
+            "color": "yellow",
+            "status": "SUSPICIOUS",
+            "alert": f"SST > Classic (ratio={ratio:.2f}). Possible double counting or definition mismatch.",
+            "is_bad": False,
+            "ratio": ratio,
+            "sst": s,
+            "classic": c,
+        }
+
+    # 3) Mały wolumen classic: ratio jest niestabilne
+    # -> stosujemy "grace" (tolerancję) i łagodniejsze alerty
+    if c < min_classic_for_ratio:
+        # podbijamy ratio o tolerancję, żeby małe liczby nie waliły na czerwono
+        adj_ratio = min(ratio + low_volume_grace, 1.0)
+
+        if adj_ratio >= green_threshold:
+            return {
+                "color": "green",
+                "status": "OK",
+                "alert": f"Stable (low volume; ratio={ratio:.2f}).",
+                "is_bad": False,
+                "ratio": ratio,
+                "sst": s,
+                "classic": c,
+            }
+
+        if adj_ratio >= yellow_threshold:
+            return {
+                "color": "yellow",
+                "status": "WARNING",
+                "alert": f"Minor gap (low volume; ratio={ratio:.2f}).",
+                "is_bad": False,
+                "ratio": ratio,
+                "sst": s,
+                "classic": c,
+            }
+
+        return {
+            "color": "yellow",
+            "status": "WARNING",
+            "alert": f"Gap detected but low volume (ratio={ratio:.2f}). Monitor trend.",
+            "is_bad": False,
+            "ratio": ratio,
+            "sst": s,
+            "classic": c,
+        }
+
+    # 4) Normalny wolumen: klasyczne progi
+    if ratio >= green_threshold:
+        return {
+            "color": "green",
+            "status": "OK",
+            "alert": "Stable",
+            "is_bad": False,
+            "ratio": ratio,
+            "sst": s,
+            "classic": c,
+        }
+
+    if ratio >= yellow_threshold:
+        return {
+            "color": "yellow",
+            "status": "WARNING",
+            "alert": f"Notice: SST efficiency slightly lower (ratio={ratio:.2f}).",
+            "is_bad": False,
+            "ratio": ratio,
+            "sst": s,
+            "classic": c,
+        }
+
+    return {
+        "color": "red",
+        "status": "FAIL",
+        "alert": f"Persistent SST efficiency gap (ratio={ratio:.2f}).",
+        "is_bad": True,
+        "ratio": ratio,
+        "sst": s,
+        "classic": c,
+    }
+
+
+
+def _safe_float(x):
+    try:
+        return float(x) if x is not None else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _severity(r, bad=0.7, warn=0.85):
+    if r is None:
+        return "nodata"
+    if r < bad:
+        return "bad"
+    if r < warn:
+        return "warn"
+    return "ok"
+
+
+def get_trend_and_alert(h7, h14, h30, disconnected=False):
+    """
+    Final version:
+    - handles 7 / 14 / 30 days
+    - separates WARNING vs FAIL
+    - handles missing data + disconnected
+    """
+
+    # --- 1) DISCONNECTED ---
+    if disconnected:
+        return (
+            "Disconnected ⚪",
+            "No BigQuery data available. Please check connection, permissions and data pipeline."
+        )
+
+    # --- 2) SAFE RATIOS ---
+    r7  = _safe_float((h7 or {}).get("ratio"))
+    r14 = _safe_float((h14 or {}).get("ratio"))
+    r30 = _safe_float((h30 or {}).get("ratio"))
+
+    s7  = _severity(r7)
+    s14 = _severity(r14)
+    s30 = _severity(r30)
+
+    states = [s7, s14, s30]
+
+    # --- 3) NO DATA ---
+    if all(s == "nodata" for s in states):
+        return (
+            "No Data ⚪",
+            "Not enough data to evaluate SST performance."
+        )
+
+    # --- 4) COUNT STATES ---
+    bad_count  = states.count("bad")
+    warn_count = states.count("warn")
+
+    # --- 5) HARD FAIL ---
+    if bad_count >= 2:
+        return (
+            "Consistent Gap 🚨",
+            "Action required: Strong and persistent SST underperformance across multiple periods (7d/14d/30d)."
+        )
+
+    # --- 6) WARNING ---
+    if bad_count == 1 or warn_count >= 2:
+        return (
+            "Watch ⚠️",
+            "Monitor: SST performance below optimal level. Check recent changes and validate tracking."
+        )
+
+    # --- 7) TREND ANALYSIS (FULL 7/14/30) ---
+    if r7 is not None and r14 is not None and r30 is not None:
+        delta = 0.05
+
+        # improving: 7 > 14 > 30
+        if (r7 - r14) > delta and (r14 - r30) > delta:
+            return (
+                "Improving 📈",
+                "Info: Clear recovery trend (7d > 14d > 30d)."
+            )
+
+        # degrading: 7 < 14 < 30
+        if (r14 - r7) > delta and (r30 - r14) > delta:
+            return (
+                "Degrading 📉",
+                "Notice: Performance declining over time (7d < 14d < 30d)."
+            )
+
+        # volatile (skacze)
+        if abs(r7 - r14) > 2 * delta and abs(r14 - r30) > 2 * delta:
+            return (
+                "Volatile 🔄",
+                "Notice: Inconsistent SST performance across periods."
+            )
+
+        # stable (małe różnice)
+        if max(r7, r14, r30) - min(r7, r14, r30) <= delta:
+            return (
+                "Stable ✅",
+                "Stable SST performance across all periods."
+            )
+
+    # --- 8) FALLBACK ---
+    return (
+        "Stable ✅",
+        "Stable."
+    )
 
 def load_sst_rows(limit: int = 20):
     """
@@ -168,36 +414,48 @@ def load_monitoring_rows(days=30):# 1. Zmieniamy argument z monitoring_date na d
         stape_p_val = stape_p_map.get(pid, 0)
         stape_e_val = stape_e_map.get(pid, 0)
 
+
+        # 1. Pobieramy unikalne pary ID i nazwa z bazy SstMetric
+        # Wybieramy property_id i client_name, ignorując te, gdzie nazwy nie ma
+        raw_names = SstMetric.objects.exclude(
+            extra_json__client_name__isnull=True
+        ).values_list("property_id", "extra_json__client_name").distinct()
+
+        # 2. Zamieniamy to na słownik (mapę) dla szybkiego wyszukiwania
+        names_map = {str(pid): name for pid, name in raw_names}
+        # UŻYWAMY NASZEGO "MÓZGU" LOGIKI
+       # 1. Wywołujesz funkcję
+        analysis = get_health_analysis(sst_val, classic_val)
+
+        # 2. Wyciągasz wartości ze słownika
+        # status = analysis["status"]
+        # health_color = analysis["color"]
+        # alert_msg = analysis["alert"]
+        status = "FROM_MONITORING_ROWS"
+        health_color = "green"
+        alert_msg = "TMONITORING_FUNCTION_HIT"
+
+        print(f"PROFIL: {pid} | SST: {sst_val} ({type(sst_val)}) | CL: {classic_val} ({type(classic_val)})")
+        # Boolean do ikonek (zostawiamy dla czytelności ✅/❌)
         classic_ok = classic_val > 0
         sst_ok = sst_val > 0
         
-        # Twoja logika statusu
-        if sst_ok and classic_ok:
-            status = "OK"
-        elif sst_ok and not classic_ok:
-            status = "UNIDENTIFIED"
-        else:
-            status = "FAIL"
-# Przed pętlą for pid... stwórz mapę nazw
-    names_map = dict(SstMetric.objects.exclude(extra_json__client_name__isnull=True).values_list("property_id", "extra_json__client_name").distinct())
-
-    # Wewnątrz pętli:
-    rows.append({
-        "Client": names_map.get(pid, pid),  # Tutaj naprawiamy nazwę!
-        "Ads ID": pid,
-        "Date": f"{start_date.strftime('%d.%m')} - {today.strftime('%d.%m')}",
-        "Classic Purchase": ("✅" if classic_ok else "❌") + f" ({int(classic_val)})",
-        "GA4 Purchase": ("✅" if ga4_val > 0 else "❌") + f" ({int(ga4_val)})",
-        "SST Purchase": ("✅" if sst_ok else "❌") + f" ({int(sst_val)})",
-        "FAST": ("✅" if fast_val > 0 else "⚠️") + f" ({int(fast_val)})",
-        "STAPE Purchase": f"✅ {int(stape_p_val)}",
-        "STAPE Events": f"✅ {int(stape_e_val)}",
-        "Status": status,
-        "Alert_Message": "Persistent SST efficiency gap" if status == "FAIL" else "Stable",
-        "Health_7d_color": "green" if sst_ok else "red",
-        "Health_14d_color": "green" if sst_ok else "red",
-        "Health_30d_color": "green" if sst_ok else "red",
-    })
+        rows.append({
+            "Client": names_map.get(pid, pid),
+            "Ads ID": pid,
+            "Date": f"{start_date.strftime('%d.%m')} - {today.strftime('%d.%m')}",
+            "Classic Purchase": ("✅" if classic_ok else "❌") + f" ({int(classic_val)})",
+            "GA4 Purchase": ("✅" if ga4_val > 0 else "❌") + f" ({int(ga4_val)})",
+            "SST Purchase": ("✅" if sst_ok else "❌") + f" ({int(sst_val)})",
+            "FAST": ("✅" if fast_val > 0 else "⚠️") + f" ({int(fast_val)})",
+            "STAPE Purchase": f"✅ {int(stape_p_val)}",
+            "STAPE Events": f"✅ {int(stape_e_val)}",
+            "Status": status,
+            "Alert_Message": alert_msg,
+            "Health_7d_color": health_color,
+            "Health_14d_color": health_color,
+            "Health_30d_color": health_color,
+        })
 
     return rows, display_date
 
@@ -293,10 +551,10 @@ WHERE property_id IN ({ids_sql})
         "bq_sql": bq_sql,
     }
 
-def load_overview_rows(start_date, end_date):
-   
+def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_overview_view
+
     rows = []
-    
+
     # --- DATY DLA HEALTH CHECK (zawsze liczone od dzisiaj) ---
     today = timezone.now().date()
     d7 = today - timedelta(days=7)
@@ -337,64 +595,110 @@ def load_overview_rows(start_date, end_date):
         ).exclude(extra_json__container_id__isnull=True)
 
         # --- GŁÓWNE WARTOŚCI (Zależne od wybranego zakresu w UI) ---
-        fast_qs = ads_base.filter(conversion_action_category__icontains="purchase", external_conversion_source__icontains="upload", conversion_action_name__icontains="gclid")
+        fast_qs = ads_base.filter(
+            conversion_action_category__icontains="purchase",
+            external_conversion_source__icontains="upload",
+            conversion_action_name__icontains="gclid"
+        )
         fast_value = pick_max_action_value(fast_qs, ADS_VALUE_EXPR)
 
-        sst_qs = ads_base.filter(conversion_action_category__icontains="purchase", external_conversion_source__icontains="webpage", conversion_action_name__icontains="sst")
+        sst_qs = ads_base.filter(
+            conversion_action_category__icontains="purchase",
+            external_conversion_source__icontains="webpage",
+            conversion_action_name__icontains="sst"
+        )
         sst_value = pick_max_action_value(sst_qs, ADS_VALUE_EXPR)
 
-        ga4_qs = ads_base.filter(conversion_action_category__icontains="purchase").filter(Q(conversion_action_name__icontains="ga4") | Q(external_conversion_source__icontains="unknown")).exclude(conversion_action_name__icontains="sst")
+        ga4_qs = (
+            ads_base
+            .filter(conversion_action_category__icontains="purchase")
+            .filter(Q(conversion_action_name__icontains="ga4") | Q(external_conversion_source__icontains="unknown"))
+            .exclude(conversion_action_name__icontains="sst")
+        )
         ga4_value = pick_max_action_value(ga4_qs, ADS_VALUE_EXPR)
 
-        classic_qs = ads_base.filter(conversion_action_category__icontains="purchase", external_conversion_source__icontains="webpage", conversion_action_name__iregex=PURCHASE_REGEX).exclude(conversion_action_name__icontains="sst")
+        classic_qs = (
+            ads_base
+            .filter(
+                conversion_action_category__icontains="purchase",
+                external_conversion_source__icontains="webpage",
+                conversion_action_name__iregex=PURCHASE_REGEX
+            )
+            .exclude(conversion_action_name__icontains="sst")
+        )
         classic_value = pick_max_action_value(classic_qs, ADS_VALUE_EXPR)
 
         stape_events_total = int(stape_base.aggregate(total=Sum("conversions"))["total"] or 0)
-        stape_purchase_total = int(stape_base.filter(conversion_action_name__iregex=PURCHASE_REGEX).aggregate(total=Sum("conversions"))["total"] or 0)
+        stape_purchase_total = int(
+            stape_base.filter(conversion_action_name__iregex=PURCHASE_REGEX).aggregate(total=Sum("conversions"))["total"] or 0
+        )
 
         has_ads_data = ads_base.exists()
 
-        # --- HEALTH CHECK LOGIC (Niezależna od kalendarza - sprawdza realne dni wstecz) ---
-        def get_sum_for_range(days_limit, is_sst):
-            # WAŻNE: Filtrujemy po SstMetric bezpośrednio, nie po ads_base!
-            qs = SstMetric.objects.filter(property_id=ads_id, report_date__gte=days_limit, extra_json__container_id__isnull=True)
+        # --- HEALTH CHECK LOGIC ---
+
+        def get_sum_for_range(start_dt, end_dt, is_sst):
+            """
+            Liczy SUMĘ konwersji w oknie [start_dt, end_dt] dla:
+            - SST purchase (is_sst=True)
+            - Classic purchase (is_sst=False)
+
+            Spójne z filtrami używanymi w tabeli:
+            - conversion_action_category zawiera "purchase"
+            - external_conversion_source zawiera "webpage"
+            - classic: regex PURCHASE_REGEX i exclude 'sst'
+            - sst: name contains 'sst'
+
+            Zwraca float.
+            """
+            qs = SstMetric.objects.filter(
+                property_id=ads_id,
+                report_date__range=[start_dt, end_dt],
+                extra_json__container_id__isnull=True,
+                conversion_action_category__icontains="purchase",
+                external_conversion_source__icontains="webpage",
+            )
+
             if is_sst:
                 qs = qs.filter(conversion_action_name__icontains="sst")
             else:
-                qs = qs.filter(conversion_action_name__iregex=PURCHASE_REGEX).exclude(conversion_action_name__icontains="sst")
-            
-            val = pick_max_action_value(qs, ADS_VALUE_EXPR)
-            return val if isinstance(val, (int, float)) else 0
+                qs = qs.filter(conversion_action_name__iregex=PURCHASE_REGEX).exclude(
+                    conversion_action_name__icontains="sst"
+                )
 
-        # Liczymy okna czasowe
-        s7, c7 = get_sum_for_range(d7, True), get_sum_for_range(d7, False)
-        s14, c14 = get_sum_for_range(d14, True), get_sum_for_range(d14, False)
-        s30, c30 = get_sum_for_range(d30, True), get_sum_for_range(d30, False)
+            total = qs.aggregate(total=Sum(ADS_VALUE_EXPR))["total"] or 0
+            return float(total)
 
-        def check_h_color(sst, cl):
-            if cl == 0: return "gray"
-            ratio = sst / cl
-            if ratio < 0.85: return "red"
-            return "green"
+        # 1. Pobieramy surowe dane dla okien czasowych
+        # ✅ POPRAWKA: teraz przekazujemy end_dt=today + is_sst
+        s7  = get_sum_for_range(d7,  today, True)
+        c7  = get_sum_for_range(d7,  today, False)
+        s14 = get_sum_for_range(d14, today, True)
+        c14 = get_sum_for_range(d14, today, False)
+        s30 = get_sum_for_range(d30, today, True)
+        c30 = get_sum_for_range(d30, today, False)
 
-        h7_col, h14_col, h30_col = check_h_color(s7, c7), check_h_color(s14, c14), check_h_color(s30, c30)
+        # 2. UŻYWAMY GLOBALNYCH FUNKCJI (Analiza zdrowia)
+        h7 = get_health_analysis(s7, c7)
+        h14 = get_health_analysis(s14, c14)
+        h30 = get_health_analysis(s30, c30)
 
-        # TREND & ALERT
-        trend, alert_msg = "Stable ✅", ""
-        if h7_col == "red":
-            if h30_col == "green": trend, alert_msg = "Degrading 📉", "Notice: SST efficiency gap detected in the last 7 days."
-            else: trend, alert_msg = "Consistent Gap 🚨", "Attention: Persistent SST efficiency gap across all ranges."
-        elif h7_col == "green" and h30_col == "red":
-            trend, alert_msg = "Improving 📈", "Info: Recent data shows SST performance recovery."
+        # 3. UŻYWAMY GLOBALNEJ FUNKCJI (Trend & Alert)
+        trend, alert_msg = get_trend_and_alert(h7, None, h30)
 
-        # DIAGNOSIS TEXT
+        # --- DIAGNOSIS TEXT ---
         def diagnose_value(val, source_exists, type_name):
-            if val != "Not available": return f"✅ {val}"
-            if not source_exists: return "❌ No BQ Data"
-            if type_name == "SST": return "🚨 Missing SST!"
-            if type_name == "FAST": return "⚠️ No FAST"
-            if type_name == "GA4": return "⚠️ No GA4"
-            return "❌ Not available"
+            if val != "Not available" and val is not None:
+                return f"✅ {val}"
+            if not source_exists:
+                return "❌ No BQ Data"
+
+            mapping = {
+                "SST": "🚨 Missing SST!",
+                "FAST": "⚠️ No FAST",
+                "GA4": "⚠️ No GA4"
+            }
+            return mapping.get(type_name, "❌ Not available")
 
         # --- FINAL ROW ---
         rows.append({
@@ -407,19 +711,20 @@ def load_overview_rows(start_date, end_date):
             "FAST": diagnose_value(fast_value, has_ads_data, "FAST"),
             "STAPE Purchase": f"✅ {stape_purchase_total}",
             "STAPE Events": f"✅ {stape_events_total}",
-            "Status": "Active" if has_ads_data else "Disconnected (BQ)",
-            "Health_7d_color": h7_col,
-            "Health_14d_color": h14_col,
-            "Health_30d_color": h30_col,
+            "Status": h7['status'] if has_ads_data else "Disconnected (BQ)",
+            "Health_7d_color": h7['color'],
+            "Health_14d_color": h14['color'],
+            "Health_30d_color": h30['color'],
             "Trend": trend,
             "Alert_Message": alert_msg,
         })
 
-    # ... (tutaj kończy się Twoja pętla for ads_id in ads_ids) ...
-
     # --- OBLICZENIA DLA PANELU GÓRNEGO (Poza pętlą) ---
     total_clients = len(rows)
-    
+
+    # ✅ zabezpieczenie, żeby nie było NameError gdy total_clients == 0
+    stape_issues = 0
+
     if total_clients > 0:
         # 1. SST Efficiency (Średnia wydajność wszystkich klientów)
         eff_list = []
@@ -429,14 +734,14 @@ def load_overview_rows(start_date, end_date):
                 # Zamieniamy stringi na liczby, ignorując ikony
                 sst = float(str(r['SST Purchase']).replace('✅ ', '').replace('🚨 Missing SST!', '0').replace('❌ No BQ Data', '0'))
                 classic = float(str(r['Classic Purchase']).replace('✅ ', '').replace('❌ No BQ Data', '0'))
-                
+
                 if classic > 0:
-                    eff_list.append(min(sst / classic, 1.0)) # max 100%
+                    eff_list.append(min(sst / classic, 1.0))  # max 100%
                 else:
                     eff_list.append(1.0)
             except:
                 eff_list.append(0)
-        
+
         # Waga 50%
         sst_score = (sum(eff_list) / total_clients) * 50
 
@@ -462,7 +767,6 @@ def load_overview_rows(start_date, end_date):
             "stape_status": "All Systems Operational" if stape_issues == 0 else f"Issues in {stape_issues} nodes"
         }
     }
-
 
 
 def pick_max_action_value(qs, value_expr, not_available=NOT_AVAILABLE):

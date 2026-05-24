@@ -13,7 +13,8 @@ from .views import (
     client_sums_view,
     privacy_audit_view,
     get_ai_analysis_view,
-    run_mass_audit_view
+    run_mass_audit_view,
+    trigger_stape_ingest
 )
 
 
@@ -32,6 +33,7 @@ urlpatterns = [
     path('get-ai-analysis/', views.get_ai_analysis_view, name='get_ai_analysis'),
     path('mass-audit/', run_mass_audit_view, name='run_mass_audit'),
     path('refresh-data/', views.refresh_data_view, name='refresh_data'),
-  
+    path('client/<str:ads_id>/revenue-analysis/', views.client_revenue_analysis_view, name='client_revenue_analysis'),
+    path("api/stape-sync/", trigger_stape_ingest, name="stape_sync"),
     
 ]

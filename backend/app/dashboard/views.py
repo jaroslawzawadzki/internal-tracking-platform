@@ -8,12 +8,12 @@ from dashboard.data_sources import (
     load_overview_rows,
     re,
 )
+from django.db.models import Sum
 from django.http import JsonResponse
 from datetime import date, timedelta
 from django.utils import timezone
 from dashboard.models import SstMetric
 from dashboard.data_sources import PURCHASE_REGEX
-from django.db.models import Sum
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -28,11 +28,14 @@ import asyncio
 import os
 from django.contrib import messages
 from .data_sources import update_metrics_from_sheet # Twoja funkcja importu
+from django.db.models import Sum, DecimalField,FloatField
+from django.db.models.functions import Coalesce,Trim
+from datetime import datetime, time
+from django.core.management import call_command
 
 
 def run_mass_audit_view(request):
-    import asyncio
-    from .services.privacy_checker import PrivacyAuditService
+    
     
     # Ścieżka, gdzie zapiszemy wynik (wewnątrz kontenera)
     output_path = "audit_results_700.json"
@@ -54,6 +57,17 @@ def run_mass_audit_view(request):
         return JsonResponse({"status": "Error", "message": str(e)})
     finally:
         loop.close()
+
+
+def trigger_stape_ingest(request):
+    call_command("ingest_stape_api")
+
+    return JsonResponse({
+        "status": "ok",
+        "message": "STAPE ingest triggered"
+    })
+
+
 
 
 def refresh_data_view(request):
@@ -109,7 +123,7 @@ def dashboard_view(request):
 
     # 2. Pobierz dane do tabeli na podstawie zakresu dni
     rows, monitoring_date = load_monitoring_rows(days=days_int)
-
+    print(f"PROFIL: ostatni  test ")
     # 3. NOWOŚĆ: Zbuduj payload SQL na ten sam zakres dni
     # Przekazujemy days_int, żeby BigQuery wiedziało, jaki zakres odświeżyć
     payload = build_ads_query_payload(days=days_int)
@@ -143,7 +157,7 @@ def dashboard_overview_view(request):
 
     # 3. Przekazujemy te daty do funkcji ładującej dane
     data_bundle = load_overview_rows(start_date, end_date)
-    
+    print(f"PROFIL: Co jest ")
     rows = data_bundle["rows"]
     stats = data_bundle["stats"]
     
@@ -255,6 +269,60 @@ def client_conversions_view(request, ads_id):
         "ads_id": ads_id,
         "conversions": conversions
     })
+@csrf_exempt
+@require_POST
+
+def client_revenue_analysis_view(request, ads_id):
+    payload = json.loads(request.body.decode("utf-8"))
+    start_date = payload.get("start_date")
+    end_date = payload.get("end_date")
+    items = payload.get("items", [])
+
+    # 1. NAPRAWA DATY: Rozszerzamy end_date o 1 dzień, 
+    # żeby na 100% złapać rekordy z 13, 14 i 15 maja (nawet z godziną)
+    try:
+        end_dt = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1)
+    except:
+        end_dt = end_date
+
+    results = []
+
+    for it in items:
+        name = it.get("name", "").strip()
+        source = it.get("source", "ADS")
+
+        # 2. NAPRAWA FILTRA: Używamy Trim i icontains, 
+        # żeby spacje w nazwach nie zerowały nam wyniku
+        qs = SstMetric.objects.filter(
+            property_id=ads_id,
+            report_date__gte=start_date,
+            report_date__lt=end_dt, # mniejsze niż jutro = cały dzisiejszy dzień włącznie
+        ).annotate(
+            clean_name=Trim('conversion_action_name')
+        ).filter(clean_name__icontains=name)
+
+        # 3. PANCERNA AGREGACJA: sprawdzamy obie kolumny
+        aggr = qs.aggregate(
+            v_all=Coalesce(Sum("all_conversion_value"), 0.0),
+            v_single=Coalesce(Sum("conversion_value"), 0.0),
+            q_all=Coalesce(Sum("all_conversions"), 0.0),
+            q_single=Coalesce(Sum("conversions"), 0.0)
+        )
+
+        # Wybór wartości (jeśli v_all jest zerem, bierze v_single)
+        final_val = float(aggr['v_all'] if aggr['v_all'] > 0 else aggr['v_single'])
+        final_qty = float(aggr['q_all'] if aggr['q_all'] > 0 else aggr['q_single'])
+
+        results.append({
+            "name": it.get("name"), # Zwracamy oryginalną nazwę dla JS
+            "source": source,
+            "quantity": final_qty,
+            "value": final_val,
+            "revenue": final_val
+        })
+
+    return JsonResponse({"status": "success", "data": results})
+
 
 
 @csrf_exempt
