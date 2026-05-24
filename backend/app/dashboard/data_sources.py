@@ -838,43 +838,108 @@ def update_metrics_from_sheet(csv_url):
         if response.status_code != 200:
             return f"Błąd pobierania: {response.status_code}"
 
-        df = pd.read_csv(io.StringIO(response.content.decode('utf-8')))
+        df = pd.read_csv(io.StringIO(response.content.decode("utf-8")))
         df.columns = [c.strip() for c in df.columns]
 
+        # (opcjonalny debug na 1 uruchomienie — możesz potem usunąć)
+        # print("COLUMNS:", df.columns.tolist())
+
+        def to_float_or_zero(x):
+            """Bezpiecznie zamienia na float; None/NaN/pusty -> 0.0"""
+            if x is None:
+                return 0.0
+            try:
+                # pandas czasem daje NaN jako float
+                if isinstance(x, float) and math.isnan(x):
+                    return 0.0
+            except Exception:
+                pass
+            s = str(x).strip()
+            if s == "" or s.lower() in ("nan", "none", "null"):
+                return 0.0
+            # czasem wartości przychodzą z przecinkiem
+            s = s.replace(",", ".")
+            try:
+                return float(s)
+            except Exception:
+                return 0.0
+
         count = 0
+        updated = 0
+        inserted = 0
+        skipped = 0
+
         for _, row in df.iterrows():
             try:
-                raw_date = row.get('report_date')
-                if not raw_date: continue
+                raw_date = row.get("report_date")
+                if not raw_date:
+                    skipped += 1
+                    continue
                 clean_date = pd.to_datetime(raw_date).date()
 
-                # Wyciągamy wartości, o które nam chodzi
-                c1 = float(row.get('conversions', 0) or 0)
-                c2 = float(row.get('all_conversions', 0) or 0)
-                final_val = max(c1, c2)
-                
-                # Pobieramy kategorię i źródło (normalizujemy do lowercase)
-                cat = str(row.get('conversion_action_category', '')).strip().lower()
-                src = str(row.get('external_conversion_source', '')).strip().lower()
+                property_id_raw = row.get("property_id")
+                conv_name_raw = row.get("conversion_action_name")
+                if property_id_raw is None or conv_name_raw is None:
+                    skipped += 1
+                    continue
 
-                # Zapisujemy do bazy
-                SstMetric.objects.update_or_create(
-                    property_id=str(row['property_id']),
+                property_id = str(property_id_raw).strip()
+                conversion_action_name = str(conv_name_raw).strip()
+                if not property_id or not conversion_action_name:
+                    skipped += 1
+                    continue
+
+                # Liczby
+                c1 = to_float_or_zero(row.get("conversions"))
+                c2 = to_float_or_zero(row.get("all_conversions"))
+                final_val = max(c1, c2)
+
+                # VALUE (w sheet widzę: conversions_value / all_conversions_value)
+                # + fallback, jeśli export używa innych nazw
+                cv = row.get("conversions_value", None)
+                if cv is None:
+                    cv = row.get("conversion_value", None)  # fallback
+
+                acv = row.get("all_conversions_value", None)
+                if acv is None:
+                    acv = row.get("all_conversion_value", None)  # fallback
+
+                conversion_value = to_float_or_zero(cv)
+                all_conversion_value = to_float_or_zero(acv)
+
+                # Meta
+                cat = str(row.get("conversion_action_category", "")).strip().lower()
+
+                # Normalizacja source (ważne dla update_or_create)
+                src = row.get("external_conversion_source", "")
+                src = "" if src is None else str(src).strip().lower()
+
+                obj, created = SstMetric.objects.update_or_create(
+                    property_id=property_id,
                     report_date=clean_date,
-                    conversion_action_name=str(row['conversion_action_name']),
-                    external_conversion_source=src, # Ważne dla unique_together!
+                    conversion_action_name=conversion_action_name,
+                    external_conversion_source=src,
                     defaults={
-                        'conversions': final_val,
-                        'all_conversions': c2, # warto zapisać oba jeśli masz w modelu
-                        'conversion_action_category': cat,
-                        # Dodaj resztę metryk jeśli chcesz (value itp.)
-                    }
+                        "conversions": final_val,
+                        "all_conversions": c2,
+                        "conversion_value": conversion_value,
+                        "all_conversion_value": all_conversion_value,
+                        "conversion_action_category": cat,
+                        "external_conversion_source": src,
+                    },
                 )
+
                 count += 1
+                if created:
+                    inserted += 1
+                else:
+                    updated += 1
+
             except Exception as e:
                 print(f"Błąd wiersza: {e}")
                 continue
-        
-        return f"Sukces! Zaimportowano {count} wierszy."
+
+        return f"Sukces! processed={count}, inserted={inserted}, updated={updated}, skipped={skipped}"
+
     except Exception as e:
         return f"Błąd: {str(e)}"
