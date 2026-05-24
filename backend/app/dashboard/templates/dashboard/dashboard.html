@@ -320,10 +320,10 @@ tbody tr td:last-child {
 
     <div class="glass-stat-card controls-card">
         <a href="{% url 'refresh_data' %}" class="btn-modern-refresh" style="text-decoration: none; display: inline-block; text-align: center; width: 100%; box-sizing: border-box;">
-        🔄 Odśwież dane z BigQuery
+        🔄 Refresh BigQuery data
         </a>
         <button class="btn-modern-refresh" onclick="runStapeSync()">
-            ⚡ Odśwież STAPE
+            ⚡ Refresh STAPE data
         </button>
         <div class="range-pill-group" style="margin-top: 0; width: 100%;">
             <a href="?days=7" class="range-pill {% if days_selected == 7 %}active{% endif %}">7d</a>
@@ -340,7 +340,7 @@ tbody tr td:last-child {
     <div class="card" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #f1f3f5;">
         <div class="box-title" style="padding: 20px; border-bottom: 1px solid #f1f3f5;">
             <h3 style="margin: 0">Customers</h3>
-            <span class="muted" style="font-size: 0.8rem; color: #8898aa;">Kliknij nazwę klienta, aby otworzyć szczegóły</span>
+            <span class="muted" style="font-size: 0.8rem; color: #8898aa;">Click the customer name to view details</span>
         </div>
 
         <div class="table-responsive" style="padding: 0 15px 15px 15px;">
@@ -399,7 +399,7 @@ tbody tr td:last-child {
         
         <div style="padding: 20px 30px; border-bottom: 1px solid #f1f3f5; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 10;">
             <div>
-                <h2 id="modalClientName" style="margin: 0; color: #2d3748;">Szczegóły klienta</h2>
+                <h2 id="modalClientName" style="margin: 0; color: #2d3748;">Customer details</h2>
                 <small id="modalAdsId" style="color: #a0aec0;"></small>
             </div>
             <button onclick="closeClientModal()" style="background: #f7fafc; border: none; font-size: 24px; cursor: pointer; color: #a0aec0; padding: 5px 15px; border-radius: 10px;">&times;</button>
@@ -413,22 +413,22 @@ tbody tr td:last-child {
                 
                 
                 <div id="modalControls" style="background: #f8f9fe; padding: 20px; border-radius: 12px;">
-                    <h4 style="margin-top: 0;">Opcje widoku</h4>
+                    <h4 style="margin-top: 0;">View options</h4>
 
                     <button id="btn-toggle-mapping" type="button"
                         style="width:100%; margin:10px 0 12px; padding:10px; border:none; border-radius:10px; font-weight:800; cursor:pointer; background:#111827; color:white;">
-                        ⚙️ Konfiguracja overview (przypięcia)
+                        ⚙️ Configure overview 
                     </button>
-
+                    
                     <div id="modal-mapping-panel" style="display:none; margin-bottom: 14px;"></div>
-
+                    
                     <div id="modal-conversions-list"></div>
                 </div>
 
             </div>
             
             <div id="modal-table-results" style="margin-top: 30px;">
-                <p class="muted">Ładowanie danych...</p>
+                <p class="muted">Loading data...</p>
             </div>
         </div>
     </div>
@@ -444,26 +444,55 @@ tbody tr td:last-child {
       function openClientModal(adsId, clientName) {
           const modal = document.getElementById('clientModal');
           modal.style.display = 'block';
+          modalMode = "analysis";
+          
+        // ✅ reset UI przy każdym otwarciu (żeby toggle startował zawsze poprawnie)
+        const mappingPanel = document.getElementById("modal-mapping-panel");
+        const conversionsList = document.getElementById("modal-conversions-list");
+        const toggleBtn = document.getElementById("btn-toggle-mapping");
+        const chartWrap = document.querySelector(".chart-container");
+
+        if (mappingPanel) mappingPanel.style.display = "none";
+        if (conversionsList) conversionsList.style.display = "block";
+        if (chartWrap) chartWrap.style.display = "block";
+        if (toggleBtn) toggleBtn.textContent = "⚙️ Configure overview";
+
           document.getElementById('modalClientName').innerText = clientName;
           document.getElementById('modalAdsId').innerText = 'Ads ID: ' + adsId;
           document.body.style.overflow = 'hidden'; // Blokada scrolla tła
 
           // Czyścimy stare wyniki przed ładowaniem nowych
-          document.getElementById("modal-table-results").innerHTML = "Ładowanie danych...";
+          document.getElementById("modal-table-results").innerHTML = "Loading data...";
           if (conversionsChart) conversionsChart.destroy();
 
           loadClientConversions(adsId); 
       }
 
       function closeClientModal() {
-          document.getElementById('clientModal').style.display = 'none';
-          document.body.style.overflow = 'auto';
-      }
+        const modal = document.getElementById('clientModal');
+        if (modal) modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
 
-      // Zamknij po kliknięciu poza okno
-      window.onclick = function(event) {
-          let modal = document.getElementById('clientModal');
-          if (event.target == modal) closeClientModal();
+        // ✅ reset widoku modala do default (analysis)
+        const mappingPanel = document.getElementById("modal-mapping-panel");
+        const conversionsList = document.getElementById("modal-conversions-list");
+        const toggleBtn = document.getElementById("btn-toggle-mapping");
+        const chartWrap = document.querySelector(".chart-container");
+        const resultsWrap = document.getElementById("modal-table-results");
+
+        if (mappingPanel) mappingPanel.style.display = "none";
+        if (conversionsList) conversionsList.style.display = "block";
+        if (chartWrap) chartWrap.style.display = "block";
+        if (resultsWrap) resultsWrap.style.display = "block";
+
+        if (toggleBtn) toggleBtn.textContent = "⚙️ Configure overview";
+        }
+
+            // Zamknij po kliknięciu poza okno
+            window.onclick = function(event) {
+                let modal = document.getElementById('clientModal');
+                if (event.target == modal) closeClientModal();
+                modalMode = "analysis";
       }
 
       // --- 2. OBSŁUGA PRZYCISKÓW DAT (7d, 14d...) ---
@@ -507,9 +536,9 @@ tbody tr td:last-child {
      function renderResultsTable(conversions, sumsMap) {
             let html = `<table style="width:100%; margin-top:10px; border-collapse: collapse;">
                         <thead><tr style="border-bottom: 2px solid #f1f3f5;">
-                        <th style="text-align:left; padding: 10px; font-size:0.75rem; color:#8898aa;">Konwersja</th>
-                        <th style="text-align:left; padding: 10px; font-size:0.75rem; color:#8898aa;">Typ</th>
-                        <th style="text-align:right; padding: 10px; font-size:0.75rem; color:#8898aa;">Ilość</th>
+                        <th style="text-align:left; padding: 10px; font-size:0.75rem; color:#8898aa;">Conversion</th>
+                        <th style="text-align:left; padding: 10px; font-size:0.75rem; color:#8898aa;">Type</th>
+                        <th style="text-align:right; padding: 10px; font-size:0.75rem; color:#8898aa;">Count</th>
                         <th style="text-align:right; padding: 10px; font-size:0.75rem; color:#8898aa;">Value</th>
                         </tr></thead><tbody>`;
 
@@ -537,7 +566,7 @@ tbody tr td:last-child {
                 html += `<tr style="border-bottom: 1px solid #f8f9fe;">
                             <td style="padding: 10px; font-size:0.85rem;">
                                 <div style="font-weight:600;">${c.name}</div>
-                                <div style="font-size:0.65rem; text-transform:uppercase; margin-top:2px;">Źródło: ${sourceLabel}</div>
+                                <div style="font-size:0.65rem; text-transform:uppercase; margin-top:2px;">Source: ${sourceLabel}</div>
                             </td>
                             <td style="padding: 10px; font-size:0.8rem; color:#adb5bd;">${c.type || 'N/A'}</td>
                             <td style="padding: 10px; text-align:right;"><strong>${countSafe.toFixed(0)}</strong></td>
@@ -662,11 +691,11 @@ tbody tr td:last-child {
                 renderChart(selected, sumsMap);
             });
         }
-        function refreshMappingPreview(data) {
+        function refreshMappingPreview(data, selectedOverride = null) {
             const range = getDateRange();
             if (!range) return;
 
-            const sel = data.selected || {};
+            const sel = selectedOverride || data.selected || {};
             const names = [];
 
             if (sel.classic) names.push(sel.classic);
@@ -678,7 +707,7 @@ tbody tr td:last-child {
             if (!container) return;
 
             if (names.length === 0) {
-                container.innerHTML = "<p class='muted'>Brak przypięć — ustaw dropdowny i kliknij Zapisz.</p>";
+                container.innerHTML = "<p class='muted'>No pins — set the dropdowns and click Save.</p>";
                 return;
             }
 
@@ -715,6 +744,7 @@ tbody tr td:last-child {
                 }));
 
                 renderResultsTable(previewConversions, sumsMap);
+                renderChart(previewConversions, sumsMap);
             });
         }
 
@@ -728,12 +758,18 @@ tbody tr td:last-child {
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
             }
-
+           
             function renderMappingPanel(data) {
             const panel = document.getElementById("modal-mapping-panel");
             if (!panel) return;
 
             const sel = data.selected || {};
+            
+            const currentLabel = (key) => {
+            const v = (data.selected && data.selected[key]) ? data.selected[key] : null;
+            return v ? `Currently: ${escapeHtml(v)}` : `Currently: AUTO (Heuristics)`;
+            };
+
 
             // MVP: pokaż wszystkie konwersje z listy (Excel) – BEZ filtrowania po type
             // i najlepiej tylko ADS, bo overview liczy Classic/GA4/SST/FAST z ads_base.
@@ -743,7 +779,7 @@ tbody tr td:last-child {
                 .sort((a, b) => a.localeCompare(b));
 
             const makeOptions = (selectedValue) => {
-                let o = `<option value="">(AUTO — jak teraz)</option>`;
+                let o = `<option value="">(AUTO)</option>`;
                 items.forEach(name => {
                 const isSel = (selectedValue && name === selectedValue) ? "selected" : "";
                 o += `<option value="${escapeHtml(name)}" ${isSel}>${escapeHtml(name)}</option>`;
@@ -754,37 +790,89 @@ tbody tr td:last-child {
             panel.innerHTML = `
                 <div style="padding: 12px; background:#fff; border:1px solid #e9ecef; border-radius: 12px;">
                 <div style="font-size:0.7rem; font-weight:800; color:#8898aa; text-transform:uppercase; margin-bottom:8px;">
-                    Co pokazujemy na overview (pierwsza strona)
+                    Overview
                 </div>
 
                 <label style="display:block; font-size:0.7rem; color:#8898aa; font-weight:700; margin-top:10px;">CLASSIC</label>
                 <select id="map-classic" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;">
                     ${makeOptions(sel.classic)}
                 </select>
+                <div style="margin-top:6px; font-size:0.68rem; color:#8898aa;">
+                ${currentLabel("classic")}
+                </div>
+
 
                 <label style="display:block; font-size:0.7rem; color:#8898aa; font-weight:700; margin-top:10px;">GA4</label>
                 <select id="map-ga4" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;">
                     ${makeOptions(sel.ga4)}
                 </select>
-
+                <div style="margin-top:6px; font-size:0.68rem; color:#8898aa;">
+                ${currentLabel("ga4")}
+                </div>
                 <label style="display:block; font-size:0.7rem; color:#8898aa; font-weight:700; margin-top:10px;">SST</label>
                 <select id="map-sst" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;">
                     ${makeOptions(sel.sst)}
                 </select>
+                <div style="margin-top:6px; font-size:0.68rem; color:#8898aa;">
+                ${currentLabel("sst")}
+                </div>
 
                 <label style="display:block; font-size:0.7rem; color:#8898aa; font-weight:700; margin-top:10px;">FAST</label>
                 <select id="map-fast" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd;">
                     ${makeOptions(sel.fast)}
                 </select>
+                <div style="margin-top:6px; font-size:0.68rem; color:#8898aa;">
+                ${currentLabel("fast")}
+                </div>
 
                 <button type="button" id="btn-save-mapping"
                     style="margin-top:12px; width:100%; padding:10px; border:none; border-radius:10px; font-weight:800; cursor:pointer; background:#5e72e4; color:white;">
-                    Zapisz przypięcie
+                    Save Pin
                 </button>
 
                 <div id="mapping-status" style="margin-top:8px; font-size:0.7rem; color:#8898aa;"></div>
                 </div>
             `;
+            // ✅ LIVE PREVIEW: odśwież tabelę po zmianie dropdownów (bez zapisu)
+            const sClassic = document.getElementById("map-classic");
+            const sGa4     = document.getElementById("map-ga4");
+            const sSst     = document.getElementById("map-sst");
+            const sFast    = document.getElementById("map-fast");
+
+            let previewTimer = null;
+            
+            const triggerPreview = () => {
+            if (modalMode !== "config") return;
+            clearTimeout(previewTimer);
+
+            previewTimer = setTimeout(() => {
+
+                // ✅ preview z dropdownów (NIE zapisane)
+                const previewSelected = {
+                classic: sClassic?.value || "",
+                ga4:     sGa4?.value || "",
+                sst:     sSst?.value || "",
+                fast:    sFast?.value || "",
+                };
+
+                // usuń puste (AUTO)
+                Object.keys(previewSelected).forEach(k => {
+                if (!previewSelected[k]) delete previewSelected[k];
+                });
+
+                // ✅ odśwież tabelę na dole na podstawie previewSelected
+                refreshMappingPreview(data, previewSelected);
+
+            }, 200);
+};
+
+
+            [sClassic, sGa4, sSst, sFast].forEach(el => {
+            if (el) el.addEventListener("change", triggerPreview);
+            });
+
+            if (modalMode === "config") triggerPreview();
+
 
             const btn = document.getElementById("btn-save-mapping");
             if (btn) {
@@ -828,6 +916,7 @@ tbody tr td:last-child {
 
                     // WAŻNE: aktualizujemy lokalnie dane
                     data.selected = out.selected || payload.selected || {};
+                   
 
                     // opcjonalnie: odśwież preview tabeli (jeśli masz tę funkcję)
                     if (typeof refreshMappingPreview === "function") {
@@ -842,52 +931,63 @@ tbody tr td:last-child {
     
     
         function loadClientConversions(adsId) {
-            fetch(`/dashboard/client/${adsId}/conversions/`)
+              fetch(`/dashboard/client/${adsId}/conversions/`)
                 .then(r => r.json())
                 .then(data => {
                     const listDiv = document.getElementById("modal-conversions-list");
-                    
+                     
                     // 1. Czyścimy kontener
                     listDiv.innerHTML = ""; 
                      // render konfiguracji do osobnego panelu
                     renderMappingPanel(data);
+                   
 
+                    
                     // --- TOGGLE: konfiguracja vs widok checkboxów ---
                     const toggleBtn = document.getElementById("btn-toggle-mapping");
                     const mappingPanel = document.getElementById("modal-mapping-panel");
                     const conversionsList = document.getElementById("modal-conversions-list");
 
                     if (toggleBtn && mappingPanel && conversionsList) {
-                    // na start: konfiguracja schowana, lista widoczna
+                    // start: konfiguracja schowana, lista widoczna
                     mappingPanel.style.display = "none";
                     conversionsList.style.display = "block";
+                    toggleBtn.textContent = "⚙️ Configure overview";
 
                     toggleBtn.onclick = () => {
-                        const showMapping = (mappingPanel.style.display === "none" || mappingPanel.style.display === "");
+                        // showMapping = czy panel jest teraz ukryty?
+                        const showMapping = (mappingPanel.style.display === "none");
 
+                        modalMode = showMapping ? "config" : "analysis";
+
+                        // pokaż/ukryj panel konfiguracji
                         mappingPanel.style.display = showMapping ? "block" : "none";
+
+                        // pokaż/ukryj listę checkboxów
                         conversionsList.style.display = showMapping ? "none" : "block";
-                        // CHOWAMY SŁUPKI (WYKRES) w trybie konfiguracji
+
+                        // wykres: w config chowamy
                         const chartWrap = document.querySelector(".chart-container");
                         if (chartWrap) chartWrap.style.display = showMapping ? "none" : "block";
 
-                        // TABELA NA DOLE ZOSTAJE (zawsze widoczna)
+                        // tabela na dole zostaje
                         const resultsWrap = document.getElementById("modal-table-results");
                         if (resultsWrap) resultsWrap.style.display = "block";
 
-
+                        // tekst przycisku
                         toggleBtn.textContent = showMapping
-                        ? "← Wróć do widoku (checkboxy)"
-                        : "⚙️ Konfiguracja overview (przypięcia)";
-                        
+                        ? "← Back to checkboxes view"
+                        : "⚙️ Configure overview";
+
+                        // źródło danych tabeli
                         if (showMapping) {
                         refreshMappingPreview(data);
                         } else {
                         refreshSums(data);
                         }
-
                     };
                     }
+
                       
 
                     // 2. Inteligenta kategoryzacja
@@ -927,11 +1027,11 @@ tbody tr td:last-child {
                             </button>
                         </div>
 
-                        <label style="font-size:0.75rem; color:#8898aa; font-weight:bold;">ZAKRES CZASU:</label>
+                        <label style="font-size:0.75rem; color:#8898aa; font-weight:bold;">Time range:</label>
                         <select id="date-preset" style="width:100%; padding:8px; border-radius:8px; margin-bottom:20px; border:1px solid #ddd; font-weight:bold;">
-                            <option value="7">Ostatnie 7 dni</option>
-                            <option value="30" selected>Ostatnie 30 dni</option>
-                            <option value="90">Ostatnie 90 dni</option>
+                            <option value="7">Last 7 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="90">Last 90 days</option>
                         </select>`;
                     
                         
@@ -942,7 +1042,7 @@ tbody tr td:last-child {
                         <details ${isOpen} style="margin-bottom: 12px; border: 1px solid #f1f3f5; border-radius: 8px; overflow: hidden;">
                             <summary style="list-style:none; padding:10px 15px; background:#f8f9fe; cursor:pointer; font-weight:bold; font-size:0.75rem; color:#5e72e4; display:flex; justify-content:space-between; align-items:center;">
                                 <span>${category}</span>
-                                <span style="font-size: 0.6rem; color: #a0aec0;">${items.length} konwersji ↓</span>
+                                <span style="font-size: 0.6rem; color: #a0aec0;">${items.length} Conversion ↓</span>
                             </summary>
                             <div style="padding: 12px 15px; background: white;">`;
                         
@@ -967,10 +1067,16 @@ tbody tr td:last-child {
                     
                     listDiv.innerHTML = html;
                    
+                    // ✅ Jeśli nic nie jest zaznaczone, zaznacz pierwszą konwersję (żeby tabela nie była pusta)
+                    const checked = document.querySelectorAll('input[name="conversion"]:checked');
+                    if (checked.length === 0) {
+                    const first = document.querySelector('input[name="conversion"]');
+                    if (first) first.checked = true;
+                    }
 
+                    // ✅ Teraz DOM już istnieje -> odpalamy pierwsze przeliczenie
+                    setTimeout(() => refreshSums(data), 0);
 
-                    // 4. Inicjalne odświeżenie danych
-                    refreshSums(data);
 
                     // 5. Listenery specyficzne dla MODALA (Poprawione)
                     const btnCount = document.getElementById('btn-mode-count');

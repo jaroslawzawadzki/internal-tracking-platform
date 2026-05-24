@@ -6,6 +6,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db.models import F, Sum, Max, Case, When, IntegerField, Q ,CharField,FloatField
 from django.db.models.functions import Greatest,Cast
+from dashboard.models import MonitoringViewConfig
 import pandas as pd
 import requests
 import io
@@ -57,7 +58,7 @@ def get_health_analysis(
     classic,
     *,
     green_threshold=0.90,   # >= 90% -> green
-    yellow_threshold=0.70,  # >= 70% -> yellow
+    yellow_threshold=0.60,  # >= 70% -> yellow
     min_classic_for_ratio=20,  # poniżej tego wolumenu nie ufamy ratio (za duży szum)
     low_volume_grace=0.20,  # przy małych wolumenach dopuszczamy większą tolerancję (ratio + 0.20)
     overdelivery_cap=1.30,  # ratio powyżej 1.30 traktuj jako "suspicious" (możliwy double count)
@@ -198,7 +199,7 @@ def _safe_float(x):
         return None
 
 
-def _severity(r, bad=0.7, warn=0.85):
+def _severity(r, bad=0.60, warn=0.9):
     if r is None:
         return "nodata"
     if r < bad:
@@ -551,6 +552,13 @@ WHERE property_id IN ({ids_sql})
         "bq_sql": bq_sql,
     }
 
+def get_client_mapping(property_id: str) -> dict:
+    obj = MonitoringViewConfig.objects.filter(property_id=str(property_id)).only("config").first()
+    if not obj or not obj.config or not isinstance(obj.config, dict):
+        return {}
+    return obj.config.get("selected") or {}
+
+
 def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_overview_view
 
     rows = []
@@ -571,6 +579,7 @@ def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_ov
     )
 
     for ads_id in ads_ids:
+        selected = get_client_mapping(ads_id)
         # 1. Client name
         client_name = (
             SstMetric.objects
@@ -595,37 +604,70 @@ def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_ov
         ).exclude(extra_json__container_id__isnull=True)
 
         # --- GŁÓWNE WARTOŚCI (Zależne od wybranego zakresu w UI) ---
-        fast_qs = ads_base.filter(
-            conversion_action_category__icontains="purchase",
-            external_conversion_source__icontains="upload",
-            conversion_action_name__icontains="gclid"
-        )
+        selected_fast = selected.get("fast")
+
+        if selected_fast:
+            # 1) Najpierw: to co user przypiął (exact match)
+            fast_qs = ads_base.filter(conversion_action_name=selected_fast)
+        else:
+            # 2) Fallback: dotychczasowe AUTO (heurystyka FAST)
+            fast_qs = ads_base.filter(
+                conversion_action_category__icontains="purchase",
+                external_conversion_source__icontains="upload",
+                conversion_action_name__icontains="gclid"
+            )
+
         fast_value = pick_max_action_value(fast_qs, ADS_VALUE_EXPR)
 
-        sst_qs = ads_base.filter(
-            conversion_action_category__icontains="purchase",
-            external_conversion_source__icontains="webpage",
-            conversion_action_name__icontains="sst"
-        )
-        sst_value = pick_max_action_value(sst_qs, ADS_VALUE_EXPR)
 
-        ga4_qs = (
-            ads_base
-            .filter(conversion_action_category__icontains="purchase")
-            .filter(Q(conversion_action_name__icontains="ga4") | Q(external_conversion_source__icontains="unknown"))
-            .exclude(conversion_action_name__icontains="sst")
-        )
-        ga4_value = pick_max_action_value(ga4_qs, ADS_VALUE_EXPR)
+        selected_sst = selected.get("sst")
 
-        classic_qs = (
-            ads_base
-            .filter(
+        if selected_sst:
+            # 1) Najpierw: to co user przypiął (exact match)
+            sst_qs = ads_base.filter(conversion_action_name=selected_sst)
+        else:
+            # 2) Fallback: dotychczasowe AUTO (heurystyka SST)
+            sst_qs = ads_base.filter(
                 conversion_action_category__icontains="purchase",
                 external_conversion_source__icontains="webpage",
-                conversion_action_name__iregex=PURCHASE_REGEX
+                conversion_action_name__icontains="sst"
             )
-            .exclude(conversion_action_name__icontains="sst")
-        )
+
+        sst_value = pick_max_action_value(sst_qs, ADS_VALUE_EXPR)
+
+
+        selected_ga4 = selected.get("ga4")
+
+        if selected_ga4:
+            # 1) Najpierw: to co user przypiął (exact match)
+            ga4_qs = ads_base.filter(conversion_action_name=selected_ga4)
+        else:
+            # 2) Fallback: dotychczasowe AUTO (heurystyka GA4)
+            ga4_qs = (
+                ads_base
+                .filter(conversion_action_category__icontains="purchase")
+                .filter(Q(conversion_action_name__icontains="ga4") | Q(external_conversion_source__icontains="unknown"))
+                .exclude(conversion_action_name__icontains="sst")
+            )
+        ga4_value = pick_max_action_value(ga4_qs, ADS_VALUE_EXPR)
+
+        selected_classic = selected.get("classic")
+
+        if selected_classic:
+            # 1) Najpierw: to co user przypiął (exact match)
+            classic_qs = ads_base.filter(conversion_action_name=selected_classic)
+        else:
+            # 2) Fallback: dotychczasowe AUTO (heurystyka purchase)
+            classic_qs = (
+                ads_base
+                .filter(
+                    conversion_action_category__icontains="purchase",
+                    external_conversion_source__icontains="webpage",
+                    conversion_action_name__iregex=PURCHASE_REGEX
+                )
+                .exclude(conversion_action_name__icontains="sst")
+            )
+
         classic_value = pick_max_action_value(classic_qs, ADS_VALUE_EXPR)
 
         stape_events_total = int(stape_base.aggregate(total=Sum("conversions"))["total"] or 0)
