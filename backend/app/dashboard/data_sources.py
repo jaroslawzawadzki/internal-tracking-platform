@@ -5,7 +5,7 @@ from datetime import date
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models import F, Sum, Max, Case, When, IntegerField, Q ,CharField,FloatField
-from django.db.models.functions import Greatest,Cast
+from django.db.models.functions import Greatest,Cast,Coalesce
 from dashboard.models import MonitoringViewConfig
 import pandas as pd
 import requests
@@ -562,6 +562,21 @@ def get_client_mapping(property_id: str) -> dict:
 def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_overview_view
 
     rows = []
+    
+    # Expression do liczenia "ilości" per wiersz:
+    # max(all_conversions, conversions) z NULL-safe
+    ADS_QTY_EXPR = Greatest(
+        Coalesce(F("all_conversions"), 0.0),
+        Coalesce(F("conversions"), 0.0),
+    )
+
+    def sum_action_value(qs):
+        """
+        Zwraca SUMĘ (po zakresie dat w qs) zamiast max/peak.
+        Dzięki temu 7/14/30/60 realnie zmienia liczby w tabeli.
+        """
+        return float(qs.aggregate(total=Sum(ADS_QTY_EXPR))["total"] or 0.0)
+
 
     # --- DATY DLA HEALTH CHECK (zawsze liczone od dzisiaj) ---
     today = timezone.now().date()
@@ -617,7 +632,7 @@ def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_ov
                 conversion_action_name__icontains="gclid"
             )
 
-        fast_value = pick_max_action_value(fast_qs, ADS_VALUE_EXPR)
+        fast_value = sum_action_value(fast_qs)
 
 
         selected_sst = selected.get("sst")
@@ -633,7 +648,7 @@ def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_ov
                 conversion_action_name__icontains="sst"
             )
 
-        sst_value = pick_max_action_value(sst_qs, ADS_VALUE_EXPR)
+        sst_value = sum_action_value(sst_qs)
 
 
         selected_ga4 = selected.get("ga4")
@@ -649,7 +664,7 @@ def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_ov
                 .filter(Q(conversion_action_name__icontains="ga4") | Q(external_conversion_source__icontains="unknown"))
                 .exclude(conversion_action_name__icontains="sst")
             )
-        ga4_value = pick_max_action_value(ga4_qs, ADS_VALUE_EXPR)
+        ga4_value = sum_action_value(ga4_qs)
 
         selected_classic = selected.get("classic")
 
@@ -668,7 +683,7 @@ def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_ov
                 .exclude(conversion_action_name__icontains="sst")
             )
 
-        classic_value = pick_max_action_value(classic_qs, ADS_VALUE_EXPR)
+        classic_value = sum_action_value(classic_qs)
 
         stape_events_total = int(stape_base.aggregate(total=Sum("conversions"))["total"] or 0)
         stape_purchase_total = int(
@@ -730,8 +745,9 @@ def load_overview_rows(start_date, end_date):  # ta uzywam w widoku dashboard_ov
 
         # --- DIAGNOSIS TEXT ---
         def diagnose_value(val, source_exists, type_name):
-            if val != "Not available" and val is not None:
-                return f"✅ {val}"
+            
+            if val not in ("Not available", None) and float(val) > 0:
+                    return f"✅ {int(round(float(val)))}"
             if not source_exists:
                 return "❌ No BQ Data"
 

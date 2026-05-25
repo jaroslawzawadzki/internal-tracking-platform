@@ -438,6 +438,7 @@ tbody tr td:last-child {
       let sumsRequestId = 0;
       let currentViewMode = 'count'; 
       let modalMode = "analysis"; // "analysis" albo "config"
+      let currentModalData = null;
       
 
       // --- 1. OBSŁUGA MODALA ---
@@ -445,6 +446,15 @@ tbody tr td:last-child {
           const modal = document.getElementById('clientModal');
           modal.style.display = 'block';
           modalMode = "analysis";
+         
+          currentModalData = {
+          ads_id: adsId,
+          client_name: clientName,
+          conversions: [],   // loadClientConversions to uzupełni
+          selected: {}       // jeśli masz mapping, to też może być uzupełnione później
+          };
+
+
           
         // ✅ reset UI przy każdym otwarciu (żeby toggle startował zawsze poprawnie)
         const mappingPanel = document.getElementById("modal-mapping-panel");
@@ -506,23 +516,35 @@ tbody tr td:last-child {
       });
 
       // --- 3. LOGIKA POBIERANIA DANYCH (DO MODALA) ---
-      function getDateRange() {
-        const preset = document.getElementById("date-preset")?.value || "30";
+      
+        function getDateRange() {
+        const presetEl = document.getElementById("date-preset");
+        const preset = presetEl?.value || "30";
+
         const fmt = (d) => d.toISOString().slice(0, 10);
+
         const today = new Date();
         const end = new Date(today);
-        end.setDate(end.getDate() - 1);
+        end.setDate(end.getDate() - 1); // wczoraj
 
-        if (preset !== "custom") {
-          const days = parseInt(preset, 10);
-          const start = new Date(end);
-          start.setDate(start.getDate() - (days - 1));
-          return { start: fmt(start), end: fmt(end) };
+        // custom ma priorytet
+        if (preset === "custom") {
+            const from = document.getElementById("date-from")?.value;
+            const to = document.getElementById("date-to")?.value;
+            return (from && to) ? { start: from, end: to, days: "custom" } : null;
         }
-        const from = document.getElementById("date-from")?.value;
-        const to = document.getElementById("date-to")?.value;
-        return (from && to) ? { start: from, end: to } : null;
-      }
+
+        // preset MUSI być liczbą: "7", "30", "90" itd.
+        const days = parseInt(preset, 10);
+        if (!Number.isFinite(days)) {
+            console.warn("date-preset is not numeric:", preset);
+            return null;
+        }
+
+        const start = new Date(end);
+        start.setDate(start.getDate() - (days - 1));
+        return { start: fmt(start), end: fmt(end), days };
+        }
 
       function getSelectedConversions(data) {
         return [...document.querySelectorAll('input[name="conversion"]:checked')]
@@ -650,6 +672,7 @@ tbody tr td:last-child {
             });
         }
       function refreshSums(data) {
+            
             const range = getDateRange();
             const selected = getSelectedConversions(data);
             if (!range || selected.length === 0) return;
@@ -684,7 +707,7 @@ tbody tr td:last-child {
                     };
                 });
 
-                console.log("FINALNA MAPA DO TABELI:", sumsMap);
+                
                 
                 // 2. Renderujemy tabelę i wykres korzystając z tego samego sumsMap
                 renderResultsTable(selected, sumsMap);
@@ -940,7 +963,13 @@ tbody tr td:last-child {
                     listDiv.innerHTML = ""; 
                      // render konfiguracji do osobnego panelu
                     renderMappingPanel(data);
-                   
+                    
+                    // 1) zapisz dane z backendu do currentModalData (ważne dla refreshSums)
+                    currentModalData = { ...currentModalData, ...data, ads_id: adsId };
+
+                    // 2) odpal od razu pierwszy refresh (po załadowaniu listy)
+                    setTimeout(() => refreshModalNow(), 0);
+
 
                     
                     // --- TOGGLE: konfiguracja vs widok checkboxów ---
@@ -1116,6 +1145,19 @@ tbody tr td:last-child {
                 window.location.href = url.toString();
             });
         });
+        (function syncPresetWithUrl() {
+            const presetEl = document.getElementById("date-preset");
+            if (!presetEl) return;
+
+            const params = new URLSearchParams(window.location.search);
+            const urlDays = params.get("days");
+            if (!urlDays) return;
+
+            const allowed = ["7", "14", "30", "60"];
+            if (allowed.includes(urlDays) && presetEl.value !== "custom") {
+                presetEl.value = urlDays;
+            }
+            })();
 
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1129,6 +1171,24 @@ tbody tr td:last-child {
         });
 
         
+        function refreshModalNow() {
+        if (!currentModalData) return;
+
+        // odśwież analitykę (zaznaczone konwersje)
+        refreshSums(currentModalData);
+
+        // odśwież preview mappingu (jeśli panel mappingu jest używany)
+        refreshMappingPreview(currentModalData);
+        }
+        
+        window.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("date-preset")?.addEventListener("change", refreshModalNow);
+        document.getElementById("date-from")?.addEventListener("change", refreshModalNow);
+        document.getElementById("date-to")?.addEventListener("change", refreshModalNow);
+        });
+
+
+
        
     </script>
     <script>
@@ -1141,7 +1201,7 @@ tbody tr td:last-child {
                 const res = await fetch("/dashboard/api/stape-sync/");
                 const data = await res.json();
 
-                console.log(data);
+                
 
                 btn.innerText = "✅ STAPE synced";
 
